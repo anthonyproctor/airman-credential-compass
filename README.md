@@ -17,10 +17,14 @@ Content-based filtering with cosine similarity.
 3. Base score = cosine similarity between the two vectors.
 4. Practical adjustments: experience prerequisites you don't meet yet, a required training course, and out-of-pocket cost against your budget after AF COOL funding.
 5. Credentials you already hold are skipped (holding PMP also skips CAPM, PHR skips aPHR, Paramedic skips EMT). Credentials that build on one you hold get a 20% boost, with the reason shown: "issuer" when the issuer recommends the first one before the second (CompTIA A+ before Network+, Network+ before Security+), "usual next step" otherwise (CAPM to PMP, EMT to Paramedic).
-6. Final score = round(100 x cosine x adjustments), capped at 100. The page shows the vectors and the math.
+6. Optional job posting: paste the text of a real posting. Credentials the posting names get a 1.6x boost and are always shown ("Named in the job posting you pasted"). Skill words in the posting (soldering, avionics, quality, Azure, patient care and so on) add their career tracks to your vector at weight 0.6, so a posting can pull in areas you didn't check. It reads pasted text, not links, because most job sites block other sites from reading their pages.
+7. Final score = round(100 x cosine x adjustments), capped at 100. The page shows the vectors and the math.
 
 ## Data
 `data/credential_data.json` holds 21 credentials checked on 14 October 2026 against each issuer's official site (fee, prerequisites, URL), plus AF COOL, GI Bill test reimbursement, and FAA/JSAMTCC funding rules with sources. `data/credential_notes.md` lists everything that could not be verified. `data/avionics_data.json` and `data/avionics_notes.md` add the five current avionics AFSCs (2A0X1, 2A2X1, 2A3X4, 2A3X5, 2A9X4, from the 31 Oct 2025 Enlisted Classification Directory) and four avionics credentials (FCC GROL, ETA Avionics, IPC J-STD-001, IPC-A-610). IPC certifications are earned through a paid course at a licensed training center, and whether AF COOL covers that course is unclear, so the tool shows the course cost instead of $0. Four AFSC-to-credential links come from official AF career field education and training plans; the rest are marked "inferred, not from AF COOL." Fees change, so confirm on the issuer's page.
+
+## User testing
+Tested 14 October 2026 by Ethan Proctor, an active duty avionics airman. He said the top picks made sense and nothing was wrong or missing, and that it was eye opening because he had never looked into civilian credentials before. His suggestion: let him use a real job posting he wants and see whether it changes the recommendations. That became the job posting feature (step 6 above).
 
 ## Limitations
 - AF COOL's own pages couldn't be reached during the build, so most AFSC mappings are inferred.
