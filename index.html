@@ -173,6 +173,7 @@ footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-si
         <div class="f"><label for="budget">Most you'd pay yourself</label>
           <select id="budget"><option value="0">$0</option><option value="250">Up to $250</option><option value="500">Up to $500</option><option value="1000">Up to $1,000</option></select></div>
         <div class="f"><label for="stay">Stay in your field or switch?</label><input type="range" id="stay" min="0" max="10" step="1" value="4"><div class="ends"><span>Stay in my field</span><span>Switch fields</span></div></div>
+        <div class="f"><span class="lbl" id="heldLbl">Certs you already have</span><div class="chips" id="held" role="group" aria-labelledby="heldLbl"></div><span class="hint">We'll skip these and move up what builds on them.</span></div>
         <div class="f"><label for="loc">City or ZIP for job links</label><input type="text" id="loc" value="Denver, CO"></div>
       </form>
     </details>
@@ -239,10 +240,16 @@ const AFSCS = {
 };
 
 const FEATURES=[...Object.keys(TRACKS),"my_afsc","entry_level"];
+const SHORT={faa_amt_ap:"FAA A&P",ncatt_aet:"NCATT AET",asq_cqi:"ASQ CQI",asq_cssgb:"Six Sigma Green Belt",comptia_a_plus:"A+",comptia_network_plus:"Network+",comptia_security_plus:"Security+",comptia_linux_plus:"Linux+",cisco_ccna:"CCNA",ms_az104:"AZ-104",isc2_sscp:"SSCP",nremt_emt:"NREMT EMT",nremt_paramedic:"NREMT Paramedic",nclex_pn:"LPN (NCLEX-PN)",nha_ccma:"CCMA",nha_cpt:"Phlebotomy (CPT)",shrm_cp:"SHRM-CP",hrci_aphr:"aPHR",hrci_phr:"PHR",pmi_capm:"CAPM",pmi_pmp:"PMP"};
+// holding the higher credential makes the lower one pointless
+const SUPERSEDES={pmi_pmp:["pmi_capm"],hrci_phr:["hrci_aphr"],nremt_paramedic:["nremt_emt"]};
+// from -> [to, basis]. "issuer" = the issuer recommends the first before the second; "ladder" = the usual next step.
+const PATHS={comptia_a_plus:[["comptia_network_plus","issuer"],["comptia_linux_plus","issuer"]],comptia_network_plus:[["comptia_security_plus","issuer"],["cisco_ccna","ladder"]],
+  pmi_capm:[["pmi_pmp","ladder"]],nremt_emt:[["nremt_paramedic","ladder"]],hrci_aphr:[["hrci_phr","ladder"]],asq_cqi:[["asq_cssgb","ladder"]],comptia_security_plus:[["isc2_sscp","ladder"]]};
 const PRESETS={
-  crew:{afsc:"2A3X3",status:"drill",exp:"5",budget:"500",stay:4,tracks:["aviation_maintenance","project_management"],loc:"Denver, CO"},
-  cyber:{afsc:"1D7 (was 3D1X2)",status:"orders",exp:"1",budget:"0",stay:3,tracks:["cybersecurity","it_networking"],loc:"Colorado Springs, CO"},
-  medic:{afsc:"4N0X1",status:"vet",exp:"0",budget:"250",stay:6,tracks:["healthcare"],loc:"Aurora, CO"}
+  crew:{afsc:"2A3X3",status:"drill",exp:"5",budget:"500",stay:4,tracks:["aviation_maintenance","project_management"],held:["pmi_capm"],loc:"Denver, CO"},
+  cyber:{afsc:"1D7 (was 3D1X2)",status:"orders",exp:"1",budget:"0",stay:3,tracks:["cybersecurity","it_networking"],held:["comptia_a_plus"],loc:"Colorado Springs, CO"},
+  medic:{afsc:"4N0X1",status:"vet",exp:"0",budget:"250",stay:6,tracks:["healthcare"],held:["nremt_emt"],loc:"Aurora, CO"}
 };
 const STATUS_TXT={ad:"active duty",orders:"Guard or Reserve on orders",drill:"Guard or Reserve on drill status",vet:"a separated veteran"};
 const EXP_TXT={"0":"under a year","1":"1 to 3 years","3":"3 to 5 years","5":"5+ years"};
@@ -250,17 +257,19 @@ const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"]/g,c=>({"&
 
 function applyPreset(k){const p=PRESETS[k];$("#afsc").value=p.afsc;$("#status").value=p.status;$("#exp").value=p.exp;$("#budget").value=p.budget;$("#stay").value=p.stay;$("#loc").value=p.loc;
   document.querySelectorAll("#tracks input").forEach(i=>i.checked=p.tracks.includes(i.value));
+  document.querySelectorAll("#held input").forEach(i=>i.checked=(p.held||[]).includes(i.value));
   document.querySelectorAll(".preset").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===k));render();}
 function init(){
   Object.entries(AFSCS).forEach(([k,v])=>$("#afsc").add(new Option(`${k}, ${v.title}`,k)));
   Object.entries(TRACKS).forEach(([k,v])=>{const l=document.createElement("label");l.className="chip";l.innerHTML=`<input type="checkbox" value="${k}">${v}`;$("#tracks").appendChild(l)});
+  CREDS.forEach(c=>{const l=document.createElement("label");l.className="chip";l.innerHTML=`<input type="checkbox" value="${c.id}">${SHORT[c.id]}`;$("#held").appendChild(l)});
   document.querySelectorAll(".preset").forEach(b=>b.addEventListener("click",()=>applyPreset(b.dataset.p)));
   $("#profile").addEventListener("input",()=>{document.querySelectorAll(".preset").forEach(b=>b.setAttribute("aria-pressed","false"));render()});
   $("#profile").addEventListener("submit",e=>e.preventDefault());
   if(matchMedia("(max-width:880px)").matches) $("#profileBox").open=false;
   applyPreset("crew");
 }
-const read=()=>({afsc:$("#afsc").value,status:$("#status").value,exp:+$("#exp").value,expKey:$("#exp").value,budget:+$("#budget").value,stay:+$("#stay").value,loc:$("#loc").value.trim()||"United States",tracks:[...document.querySelectorAll("#tracks input:checked")].map(i=>i.value)});
+const read=()=>({afsc:$("#afsc").value,status:$("#status").value,exp:+$("#exp").value,expKey:$("#exp").value,budget:+$("#budget").value,stay:+$("#stay").value,loc:$("#loc").value.trim()||"United States",tracks:[...document.querySelectorAll("#tracks input:checked")].map(i=>i.value),held:[...document.querySelectorAll("#held input:checked")].map(i=>i.value)});
 const cool=s=>s==="ad"||s==="orders";
 function vecC(c,afsc){const v=FEATURES.map(f=>c.tracks.includes(f)?1:0);const m=AFSCS[afsc].map[c.id];v[7]=m?(m==="cfetp"?1:.8):0;v[8]=c.level===0?1:c.level===1?.5:0;return v}
 function vecU(p){const v=FEATURES.map(f=>p.tracks.includes(f)?1:0);v[7]=1.5*(10-p.stay)/10;v[8]=p.exp<1?1:p.exp<3?.5:.15;return v}
@@ -277,23 +286,26 @@ function score(c,p){
   if(m==="cfetp") ok.push(`Named in the official ${p.afsc} career field training plan`);
   else if(m) ok.push(`A natural next step from ${p.afsc} (our mapping)`);
   if(hits.length) ok.push(`Fits your goal: ${hits.join(" and ")}`);
-  if(c.training){mult*=.85;chk.push("You'll need a formal course before the exam")}
+  const builds=p.held.flatMap(h=>(PATHS[h]||[]).filter(x=>x[0]===c.id).map(x=>[h,x[1]]));
+  if(builds.length){mult*=1.2;builds.forEach(([h,b])=>ok.unshift(b==="issuer"?`Builds on your ${SHORT[h]}; the issuer recommends it first`:`The usual next step after your ${SHORT[h]}`))}
+  if(c.training&&!(c.id==="nremt_paramedic"&&p.held.includes("nremt_emt"))){mult*=.85;chk.push("You'll need a formal course before the exam")}
   if(c.exp>p.exp){mult*=c.exp-p.exp>=2?.55:.75;chk.push(`Experience required: ${c.expText}`)}
   else if(c.exp>0) ok.push(`You meet the experience requirement (${c.expText})`);
   const oop=c.fee==null?null:(cool(p.status)?0:c.fee);
   if(oop===0) ok.push("AF COOL can pay for it on your current status");
   else if(oop!=null&&oop>p.budget){mult*=p.budget===0?.6:.75;chk.push(`About $${oop} out of pocket, over your $${p.budget} limit`)}
   if(c.id==="faa_amt_ap"&&!cool(p.status)) ok.push("The three FAA written tests are free for Guard members through JSAMTCC");
-  return {c,cv,uv,base,final:Math.round(100*base*mult),ok,chk,pay:youPay(c,p),cost:oop??9999};
+  return {c,cv,uv,base,final:Math.min(100,Math.round(100*base*mult)),ok,chk,pay:youPay(c,p),cost:oop??9999};
 }
 const jobs=(c,p)=>`https://www.indeed.com/jobs?q=${encodeURIComponent(c.name.replace(/\(.*?\)/g,"").trim())}&l=${encodeURIComponent(p.loc)}`;
 const reasons=r=>`<ul class="reasons">${r.ok.map(x=>`<li class="ok">${esc(x)}</li>`).join("")}${r.chk.map(x=>`<li class="chk">${esc(x)}</li>`).join("")}</ul>`;
 function render(){
   const p=read();
-  $("#who").textContent=`${p.afsc}, ${STATUS_TXT[p.status]}, ${EXP_TXT[p.expKey]} experience, ${p.budget?"up to $"+p.budget.toLocaleString():"nothing"} out of pocket.`;
-  const pool=CREDS.filter(c=>AFSCS[p.afsc].map[c.id]||c.tracks.some(t=>p.tracks.includes(t)));
+  $("#who").textContent=`${p.afsc}, ${STATUS_TXT[p.status]}, ${EXP_TXT[p.expKey]} experience, ${p.budget?"up to $"+p.budget.toLocaleString():"nothing"} out of pocket${p.held.length?", holds "+p.held.map(h=>SHORT[h]).join(", "):""}.`;
+  const skip=new Set(p.held.flatMap(h=>[h,...(SUPERSEDES[h]||[])]));
+  const pool=CREDS.filter(c=>!skip.has(c.id)&&(AFSCS[p.afsc].map[c.id]||c.tracks.some(t=>p.tracks.includes(t))));
   const R=pool.map(c=>score(c,p)).sort((a,b)=>b.final-a.final||a.cost-b.cost).slice(0,6);
-  $("#count").textContent=R.length?`Top ${R.length} of ${CREDS.length} credentials`:"";
+  $("#count").textContent=R.length?`Top ${R.length} of ${CREDS.length-p.held.length} credentials you don't have yet`:"";
   if(!R.length){$("#out").innerHTML=`<div class="empty">Pick at least one place you want to work to see recommendations.</div>`}
   else{
     const b=R[0];

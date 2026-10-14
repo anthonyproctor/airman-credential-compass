@@ -16,7 +16,8 @@ Content-based filtering with cosine similarity.
 2. Your profile becomes a vector on the same features. The AFSC weight comes from the stay-or-switch slider, and the entry-level weight comes from your years of experience.
 3. Base score = cosine similarity between the two vectors.
 4. Practical adjustments: experience prerequisites you don't meet yet, a required training course, and out-of-pocket cost against your budget after AF COOL funding.
-5. Final score = round(100 x cosine x adjustments). The page shows the vectors and the math.
+5. Credentials you already hold are skipped (holding PMP also skips CAPM, PHR skips aPHR, Paramedic skips EMT). Credentials that build on one you hold get a 20% boost, with the reason shown: "issuer" when the issuer recommends the first one before the second (CompTIA A+ before Network+, Network+ before Security+), "usual next step" otherwise (CAPM to PMP, EMT to Paramedic).
+6. Final score = round(100 x cosine x adjustments), capped at 100. The page shows the vectors and the math.
 
 ## Data
 `data/credential_data.json` holds 21 credentials checked on 14 October 2026 against each issuer's official site (fee, prerequisites, URL), plus AF COOL, GI Bill test reimbursement, and FAA/JSAMTCC funding rules with sources. `data/credential_notes.md` lists everything that could not be verified. Four AFSC-to-credential links come from official AF career field education and training plans; the rest are marked "inferred, not from AF COOL." Fees change, so confirm on the issuer's page.
