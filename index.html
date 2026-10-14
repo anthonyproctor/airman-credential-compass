@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Ranks civilian certifications for Air Force and Air National Guard members by job, goals, experience and budget.">
+<title>Airman Credential Compass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: two-panel "maintenance form" — profile inputs on the left, ranked results on the right; stacks on phones */
+:root{
+  --bg:#f3f4f1; --panel:#ffffff; --ink:#1d2430; --muted:#5b6574; --line:#d6dad3;
+  --accent:#b8780a; --accent-ink:#ffffff; --navy:#24324a; --good:#2f7a4f; --warn:#a45a12; --chip:#e9ece6;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141922; --panel:#1c2330; --ink:#e7eaef; --muted:#9aa5b5; --line:#2e3746;
+  --accent:#e0a33a; --accent-ink:#141922; --navy:#c9d4e6; --good:#62c08a; --warn:#e5a35a; --chip:#262f3d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141922; --panel:#1c2330; --ink:#e7eaef; --muted:#9aa5b5; --line:#2e3746;
+  --accent:#e0a33a; --accent-ink:#141922; --navy:#c9d4e6; --good:#62c08a; --warn:#e5a35a; --chip:#262f3d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:3px solid var(--navy);padding-bottom:12px;margin-bottom:20px}
+h1{font-family:var(--display);font-weight:700;font-size:2.4rem;letter-spacing:.02em;margin:0;line-height:1;text-transform:uppercase;color:var(--navy)}
+.tag{font-family:var(--mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.lede{max-width:62ch;color:var(--muted);margin:6px 0 0}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px;min-width:0}
+.panel h2{font-family:var(--display);font-weight:600;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--navy)}
+.field{display:grid;gap:6px;margin-bottom:16px}
+label,.lbl{font-family:var(--mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+select,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px}
+select:focus,input:focus,button:focus-visible,.chip:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.85rem;cursor:pointer;user-select:none}
+.chip input{accent-color:var(--accent);margin:0}
+.chip:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--panel))}
+.range-row{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.note{font-size:.8rem;color:var(--muted)}
+.results-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:12px}
+.results-head h2{margin:0}
+.list{display:grid;gap:12px}
+.card{border:1px solid var(--line);border-left:5px solid var(--line);border-radius:6px;padding:14px 16px;background:var(--panel);display:grid;gap:8px;min-width:0}
+.card.top{border-left-color:var(--accent)}
+.row1{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;justify-content:space-between}
+.rank{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.name{font-family:var(--display);font-weight:600;font-size:1.35rem;letter-spacing:.02em;margin:0;line-height:1.15}
+.issuer{font-size:.85rem;color:var(--muted)}
+.score{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.9rem;font-variant-numeric:tabular-nums}
+.bar{width:110px;height:8px;background:var(--chip);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.facts{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem}
+.facts b{font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.why{margin:0;padding-left:18px;font-size:.88rem}
+.why li{margin:2px 0}
+.pill{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid currentColor}
+.ok{color:var(--good)} .flag{color:var(--warn)}
+.links{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem}
+a{color:var(--navy);text-underline-offset:2px}
+.fund{margin-top:20px}
+.fund ul{margin:0;padding-left:18px}
+.fund li{margin:6px 0;font-size:.9rem}
+details{margin-top:20px}
+summary{cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.1rem;letter-spacing:.05em;text-transform:uppercase;color:var(--navy)}
+.math{font-family:var(--mono);font-size:.8rem;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px;overflow-x:auto;white-space:pre}
+table{border-collapse:collapse;font-size:.8rem;font-variant-numeric:tabular-nums}
+th,td{border:1px solid var(--line);padding:4px 6px;text-align:left}
+.tablewrap{overflow-x:auto}
+footer{margin-top:28px;font-size:.78rem;color:var(--muted);max-width:80ch}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div>
+    <div class="tag">USAF / ANG · Credential recommender · Prototype</div>
+    <h1>Airman Credential Compass</h1>
+    <p class="lede">Tell it your Air Force job, where you want to go, and what you can spend. It ranks the civilian certifications that fit, shows what each one costs and who can pay for it, and explains why it ranked each one where it did.</p>
+  </div>
+</header>
+
+<div class="grid">
+  <form class="panel" id="profile" autocomplete="off">
+    <h2>Your profile</h2>
+    <div class="field">
+      <label for="afsc">Air Force Specialty Code (AFSC)</label>
+      <select id="afsc"></select>
+    </div>
+    <div class="field">
+      <label for="status">Duty status</label>
+      <select id="status">
+        <option value="ad">Active duty (Regular AF / Space Force)</option>
+        <option value="orders">Guard or Reserve, on Title 10 or Title 32 502(f) orders</option>
+        <option value="drill">Guard or Reserve, drill status</option>
+        <option value="vet">Separated veteran</option>
+      </select>
+    </div>
+    <div class="field">
+      <span class="lbl">Where do you want to work? (pick one or more)</span>
+      <div class="chips" id="tracks"></div>
+    </div>
+    <div class="field">
+      <label for="exp">Years doing this kind of work (military counts)</label>
+      <select id="exp">
+        <option value="0">Under 1 year</option>
+        <option value="1">1 to 3 years</option>
+        <option value="3">3 to 5 years</option>
+        <option value="5">5+ years</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="budget">Most you'd pay out of pocket</label>
+      <select id="budget">
+        <option value="0">$0</option>
+        <option value="250">Up to $250</option>
+        <option value="500">Up to $500</option>
+        <option value="1000">Up to $1,000</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="stay">Stay in my career field ↔ Switch fields</label>
+      <input type="range" id="stay" min="0" max="10" step="1" value="4">
+      <div class="range-row"><span>Stay</span><span>Switch</span></div>
+    </div>
+    <div class="field">
+      <label for="loc">City or ZIP for job searches</label>
+      <input type="text" id="loc" value="Denver, CO">
+    </div>
+    <p class="note">The form opens filled with an example profile. Change anything and the list re-ranks instantly.</p>
+  </form>
+
+  <section class="panel" aria-live="polite">
+    <div class="results-head">
+      <h2>Recommended next credentials</h2>
+      <span class="tag" id="summary"></span>
+    </div>
+    <div class="list" id="list"></div>
+
+    <div class="fund" id="fund"></div>
+
+    <details>
+      <summary>How the ranking works</summary>
+      <p class="note">This is a content-based recommender. Each credential is described by a feature vector, your profile becomes a vector on the same features, and the base score is the cosine similarity between the two. Practical checks (experience prerequisites, cost against your budget after funding) then adjust that score.</p>
+      <div class="math" id="math"></div>
+      <div class="tablewrap" id="vectors"></div>
+    </details>
+  </section>
+</div>
+
+<footer>
+  Data checked 14 October 2026 from each issuer's official site (fees, prerequisites), the AF career field education and training plans, VA.gov, and the AF COOL fact sheet. AFSC-to-credential links marked "inferred" were not taken from AF COOL. Fees change; confirm on the issuer's page before you pay. AF COOL eligibility rules are summarized from published fact sheets; your base education office has the final word. Built with Claude (Anthropic) as a class prototype for BANA 6780, CU Denver.
+</footer>
+</div>
+
+<script>
+const TRACKS = {
+  aviation_maintenance:"Aviation maintenance", it_networking:"IT and networking", cybersecurity:"Cybersecurity",
+  healthcare:"Healthcare", project_management:"Project management", hr_admin:"HR and admin", logistics:"Quality and logistics"
+};
+// fee: dollars used for budget math; feeText: what the user sees. exp: years of experience the issuer requires to sit the exam.
+// training: true when a formal course is required before the exam.
+const CREDS = [
+ {id:"faa_amt_ap",name:"FAA Airframe & Powerplant (A&P)",issuer:"Federal Aviation Administration",url:"https://www.faa.gov/mechanics/become",tracks:["aviation_maintenance"],fee:null,feeText:"Varies by test center and examiner; the 3 written tests are free for military through FAA/JSAMTCC",exp:1.5,expText:"18 months documented experience for one rating, 30 months for both (14 CFR 65.77)",level:2,roles:"Airline or repair-station aircraft maintenance technician"},
+ {id:"ncatt_aet",name:"NCATT Aircraft Electronics Technician (AET)",issuer:"ASTM International / NCATT",url:"https://www.astm.org/standards-and-solutions/certification/ncatt",tracks:["aviation_maintenance"],fee:175,feeText:"$175",exp:0,expText:"Eligibility not published on the pages checked",level:1,roles:"Avionics technician"},
+ {id:"asq_cqi",name:"ASQ Certified Quality Inspector (CQI)",issuer:"American Society for Quality",url:"https://www.asq.org/cert/quality-inspector",tracks:["aviation_maintenance","logistics"],fee:460,feeText:"$460 ($360 for ASQ members)",exp:1,expText:"3 years experience; a military or trade school diploma waives 2",level:2,roles:"Quality inspector, QA technician"},
+ {id:"asq_cssgb",name:"ASQ Six Sigma Green Belt (CSSGB)",issuer:"American Society for Quality",url:"https://www.asq.org/cert/six-sigma-green-belt",tracks:["project_management","logistics"],fee:483,feeText:"$483 ($383 for ASQ members)",exp:3,expText:"3 years experience in the body of knowledge",level:2,roles:"Process improvement, operations analyst"},
+ {id:"comptia_a_plus",name:"CompTIA A+",issuer:"CompTIA",url:"https://www.comptia.org/en-us/certifications/a/",tracks:["it_networking"],fee:548,feeText:"$274 per exam, 2 exams (about $548)",exp:0,expText:"None required; 12 months help-desk experience recommended",level:0,roles:"IT support specialist, help desk"},
+ {id:"comptia_network_plus",name:"CompTIA Network+",issuer:"CompTIA",url:"https://www.comptia.org/en-us/certifications/network/",tracks:["it_networking"],fee:399,feeText:"$399",exp:0,expText:"None required; A+ and 9 to 12 months recommended",level:1,roles:"Network support, junior network admin"},
+ {id:"comptia_security_plus",name:"CompTIA Security+",issuer:"CompTIA",url:"https://www.comptia.org/en-us/certifications/security/",tracks:["cybersecurity","it_networking"],fee:439,feeText:"$439",exp:0,expText:"None required; Network+ and 2 years recommended",level:1,roles:"Security analyst, systems administrator (DoD 8140 baseline)"},
+ {id:"comptia_linux_plus",name:"CompTIA Linux+",issuer:"CompTIA",url:"https://www.comptia.org/en-us/certifications/linux/",tracks:["it_networking"],fee:399,feeText:"$399",exp:0,expText:"None required; 12 months Linux experience recommended",level:1,roles:"Linux systems administrator"},
+ {id:"cisco_ccna",name:"Cisco CCNA",issuer:"Cisco",url:"https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html",tracks:["it_networking"],fee:300,feeText:"$300",exp:0,expText:"No formal prerequisites",level:1,roles:"Network engineer, network administrator"},
+ {id:"ms_az104",name:"Microsoft Azure Administrator (AZ-104)",issuer:"Microsoft",url:"https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/",tracks:["it_networking"],fee:null,feeText:"Priced by country; check Microsoft's page",exp:0,expText:"No formal prerequisite; hands-on Azure experience expected",level:2,roles:"Azure or cloud administrator"},
+ {id:"isc2_sscp",name:"ISC2 SSCP",issuer:"ISC2",url:"https://www.isc2.org/certifications/sscp",tracks:["cybersecurity"],fee:249,feeText:"$249",exp:1,expText:"1 year security operations experience",level:1,roles:"Security analyst, network security engineer"},
+ {id:"nremt_emt",name:"NREMT Emergency Medical Technician",issuer:"National Registry of EMTs",url:"https://nremt.org/EMT/Certification",tracks:["healthcare"],fee:104,feeText:"$104 per attempt",exp:0,training:true,expText:"Requires an EMT education program (or a current state license)",level:0,roles:"EMT, ER technician"},
+ {id:"nremt_paramedic",name:"NREMT Paramedic",issuer:"National Registry of EMTs",url:"https://nremt.org/Paramedic/Certification",tracks:["healthcare"],fee:175,feeText:"$175",exp:0,training:true,expText:"Requires a paramedic education program (or a current state license)",level:2,roles:"Paramedic"},
+ {id:"nclex_pn",name:"NCLEX-PN (Licensed Practical Nurse)",issuer:"NCSBN / state board of nursing",url:"https://www.nclex.com/fees-payment.page",tracks:["healthcare"],fee:200,feeText:"$200 exam registration, plus your state's license fee",exp:0,training:true,expText:"Set by each state board; usually an approved PN program",level:2,roles:"Licensed practical nurse"},
+ {id:"nha_ccma",name:"NHA Certified Clinical Medical Assistant (CCMA)",issuer:"National Healthcareer Association",url:"https://www.nhanow.com/certifications/clinical-medical-assistant",tracks:["healthcare"],fee:169,feeText:"$169",exp:1,expText:"MA training program, or 1 year supervised work",level:0,roles:"Clinical medical assistant"},
+ {id:"nha_cpt",name:"NHA Certified Phlebotomy Technician (CPT)",issuer:"National Healthcareer Association",url:"https://www.nhanow.com/certifications/phlebotomy-technician",tracks:["healthcare"],fee:134,feeText:"$134",exp:1,expText:"Phlebotomy training or 1 year supervised work, plus 30 live draws",level:0,roles:"Phlebotomy technician"},
+ {id:"shrm_cp",name:"SHRM Certified Professional (SHRM-CP)",issuer:"SHRM",url:"https://www.shrm.org/credentials/certification/shrm-cp",tracks:["hr_admin"],fee:469,feeText:"$369 to $499 (military pricing available)",exp:0,expText:"No HR experience required; military HR and personnel service qualifies",level:1,roles:"HR generalist"},
+ {id:"hrci_aphr",name:"HRCI Associate Professional in HR (aPHR)",issuer:"HR Certification Institute",url:"https://www.hrci.org/certifications/individual-certifications/aphr",tracks:["hr_admin"],fee:400,feeText:"$400",exp:0,expText:"No HR experience required",level:0,roles:"HR assistant, HR coordinator"},
+ {id:"hrci_phr",name:"HRCI Professional in HR (PHR)",issuer:"HR Certification Institute",url:"https://www.hrci.org/certifications/individual-certifications/phr",tracks:["hr_admin"],fee:495,feeText:"$495",exp:4,expText:"1 to 4 years professional HR experience depending on degree",level:2,roles:"HR generalist, HR manager"},
+ {id:"pmi_capm",name:"PMI Certified Associate in Project Management (CAPM)",issuer:"Project Management Institute",url:"https://www.pmi.org/certifications/certified-associate-capm",tracks:["project_management"],fee:300,feeText:"$300 ($225 PMI members)",exp:0,expText:"23 hours of PM education, no experience required",level:0,roles:"Project coordinator"},
+ {id:"pmi_pmp",name:"PMI Project Management Professional (PMP)",issuer:"Project Management Institute",url:"https://www.pmi.org/certifications/project-management-pmp",tracks:["project_management"],fee:675,feeText:"$675 ($425 PMI members)",exp:3,expText:"35 hours training plus 3 to 5 years leading projects",level:2,roles:"Project manager, program manager"}
+];
+// AFSC -> credentials. basis "cfetp" = named in the official AF career field training plan; "inferred" = our mapping, not from AF COOL.
+const AFSCS = {
+ "2A3X3":{title:"Tactical Aircraft Maintenance (crew chief)",map:{faa_amt_ap:"cfetp",ncatt_aet:"inferred",asq_cqi:"inferred",asq_cssgb:"inferred"}},
+ "2A6X1":{title:"Aerospace Propulsion",map:{faa_amt_ap:"cfetp",ncatt_aet:"inferred",asq_cqi:"inferred",asq_cssgb:"inferred"}},
+ "1D7 (was 3D1X2)":{title:"Cyber Defense Ops, formerly Cyber Transport Systems",map:{comptia_network_plus:"inferred",cisco_ccna:"inferred",comptia_security_plus:"inferred",comptia_a_plus:"inferred"}},
+ "1D7 (was 3D0X2)":{title:"Cyber Defense Ops, formerly Cyber Systems Operations",map:{comptia_security_plus:"inferred",comptia_linux_plus:"inferred",ms_az104:"inferred",isc2_sscp:"inferred",comptia_a_plus:"inferred"}},
+ "4N0X1":{title:"Aerospace Medical Service",map:{nremt_emt:"cfetp",nremt_paramedic:"cfetp",nclex_pn:"inferred",nha_ccma:"inferred",nha_cpt:"inferred"}},
+ "3F0X1":{title:"Human Resources and Administration",map:{shrm_cp:"inferred",hrci_aphr:"inferred",hrci_phr:"inferred",pmi_capm:"inferred"}}
+};
+const FEATURES = [...Object.keys(TRACKS),"my_afsc","entry_level"];
+const $ = s => document.querySelector(s);
+
+function init(){
+  const a=$("#afsc"); Object.entries(AFSCS).forEach(([k,v])=>a.add(new Option(`${k} · ${v.title}`,k)));
+  const t=$("#tracks");
+  Object.entries(TRACKS).forEach(([k,v])=>{const l=document.createElement("label");l.className="chip";l.innerHTML=`<input type="checkbox" id="t_${k}" value="${k}"> ${v}`;t.appendChild(l)});
+  // example profile: F-16 crew chief in the Guard, interested in maintenance and project work
+  a.value="2A3X3"; $("#status").value="drill"; $("#exp").value="5"; $("#budget").value="500";
+  ["aviation_maintenance","project_management"].forEach(k=>$("#t_"+k).checked=true);
+  $("#profile").addEventListener("input",render); $("#profile").addEventListener("submit",e=>e.preventDefault());
+  render();
+}
+function credVector(c,afsc){
+  const v=FEATURES.map(f=>c.tracks.includes(f)?1:0);
+  v[FEATURES.indexOf("my_afsc")] = AFSCS[afsc].map[c.id]? (AFSCS[afsc].map[c.id]==="cfetp"?1:0.8) : 0;
+  v[FEATURES.indexOf("entry_level")] = c.level===0?1:c.level===1?0.5:0;
+  return v;
+}
+function userVector(p){
+  const v=FEATURES.map(f=>p.tracks.includes(f)?1:0);
+  v[FEATURES.indexOf("my_afsc")] = 1.5*(10-p.stay)/10;           // how much you want to stay in your field
+  v[FEATURES.indexOf("entry_level")] = p.exp<1?1:p.exp<3?0.5:0.15; // newer members lean toward entry credentials
+  return v;
+}
+const cosine=(a,b)=>{let d=0,na=0,nb=0;a.forEach((x,i)=>{d+=x*b[i];na+=x*x;nb+=b[i]*b[i]});return na&&nb?d/Math.sqrt(na*nb):0};
+function coolEligible(status){return status==="ad"||status==="orders"}
+function outOfPocket(c,p){
+  if(c.fee==null) return null;
+  if(coolEligible(p.status)) return 0;          // AF COOL pays exam + admin fees (lifetime cap $4,500)
+  return c.fee;                                  // GI Bill test reimbursement may refund it later; shown separately
+}
+function score(c,p){
+  const cv=credVector(c,p.afsc), uv=userVector(p), base=cosine(uv,cv);
+  let mult=1; const why=[], flags=[];
+  const mapped=AFSCS[p.afsc].map[c.id];
+  const trackHits=c.tracks.filter(t=>p.tracks.includes(t)).map(t=>TRACKS[t]);
+  if(trackHits.length) why.push(`Matches your goal: ${trackHits.join(", ")}`);
+  if(mapped==="cfetp") why.push(`Named in the official ${p.afsc} career field training plan`);
+  else if(mapped) why.push(`Common next step for ${p.afsc} (our mapping, not from AF COOL)`);
+  if(c.training){mult*=0.85; flags.push("Needs a formal course before the exam")}
+  if(c.exp>p.exp){mult*= c.exp-p.exp>=2?0.55:0.75; flags.push(`Experience needed: ${c.expText}`)}
+  else if(c.exp>0) why.push(`Your experience meets the requirement: ${c.expText}`);
+  const oop=outOfPocket(c,p);
+  if(oop===0) why.push("AF COOL can cover the exam on your current status");
+  else if(oop!=null && oop>p.budget){mult*= p.budget===0?0.6:0.75; flags.push(`About $${oop} out of pocket, over your $${p.budget} limit`)}
+  else if(oop!=null) why.push(`About $${oop} out of pocket, inside your budget`);
+  if(c.id==="faa_amt_ap"&&!coolEligible(p.status)) why.push("The 3 FAA written tests are free for Guard members through JSAMTCC");
+  return {c,base,final:Math.round(100*base*mult),why,flags,mapped,cv,uv};
+}
+function readProfile(){
+  return {afsc:$("#afsc").value,status:$("#status").value,exp:+$("#exp").value,budget:+$("#budget").value,stay:+$("#stay").value,
+    loc:$("#loc").value.trim()||"United States",tracks:[...document.querySelectorAll("#tracks input:checked")].map(i=>i.value)};
+}
+function render(){
+  const p=readProfile();
+  const pool=CREDS.filter(c=>AFSCS[p.afsc].map[c.id]||c.tracks.some(t=>p.tracks.includes(t)));
+  const ranked=pool.map(c=>score(c,p)).sort((a,b)=>b.final-a.final).slice(0,6);
+  $("#summary").textContent=`${ranked.length} of ${CREDS.length} credentials shown`;
+  $("#list").innerHTML = ranked.length? ranked.map((r,i)=>`
+    <article class="card ${i===0?"top":""}">
+      <div class="row1">
+        <div><div class="rank">#${i+1}</div><h3 class="name">${r.c.name}</h3><div class="issuer">${r.c.issuer}</div></div>
+        <div class="score" title="Match score out of 100"><span class="bar"><i style="width:${r.final}%"></i></span>${r.final}</div>
+      </div>
+      <div class="facts"><span><b>Exam cost</b>${r.c.feeText}</span><span><b>Opens</b>${r.c.roles}</span></div>
+      <ul class="why">${r.why.map(w=>`<li><span class="pill ok">fit</span> ${w}</li>`).join("")}${r.flags.map(w=>`<li><span class="pill flag">check</span> ${w}</li>`).join("")}</ul>
+      <div class="links"><a href="${r.c.url}" target="_blank" rel="noopener">Official page</a>
+        <a href="https://www.indeed.com/jobs?q=${encodeURIComponent(r.c.name.replace(/\(.*\)/,"").trim())}&l=${encodeURIComponent(p.loc)}" target="_blank" rel="noopener">Jobs near ${p.loc}</a></div>
+    </article>`).join("") : `<p class="note">Pick at least one goal to see recommendations.</p>`;
+  const fund=[];
+  if(coolEligible(p.status)) fund.push(`<li><b>AF COOL</b> pays exams, admin fees, and up to $500 in books, with a $4,500 lifetime cap. You need a 5-level in your primary AFSC and supervisor approval, and you repay it if you fail the exam. Guard and Reserve must stay on Title 10 or Title 32 502(f) orders for the whole process.</li>`);
+  else if(p.status==="drill") fund.push(`<li><b>AF COOL</b> is not available on drill status. It opens up if you're on Title 10 or Title 32 502(f) orders for the whole credential process.</li>`);
+  else fund.push(`<li><b>AF COOL</b> ends when you separate.</li>`);
+  if(p.status!=="ad") fund.push(`<li><b>GI Bill test reimbursement</b> (VA) pays back up to $2,000 per approved test, including registration fees, and draws down your entitlement. Drilling Guard members use it under Chapter 1606 if eligible.</li>`);
+  fund.push(`<li><b>FAA mechanic written tests</b> are free for active, Guard and Reserve Air Force members through the JSAMTCC program.</li>`);
+  $("#fund").innerHTML=`<h2>Ways to pay</h2><ul>${fund.join("")}</ul>`;
+  const top=ranked[0];
+  $("#math").textContent = top? `features      = [${FEATURES.join(", ")}]
+your vector   = [${top.uv.map(x=>x.toFixed(2)).join(", ")}]
+${top.c.id.padEnd(13)} = [${top.cv.map(x=>x.toFixed(2)).join(", ")}]
+cosine        = ${top.base.toFixed(3)}
+adjustments   = experience, required course, cost vs budget after funding
+final score   = round(100 x cosine x adjustments) = ${top.final}` : "";
+  $("#vectors").innerHTML = ranked.length? `<table><tr><th>credential</th>${FEATURES.map(f=>`<th>${f}</th>`).join("")}<th>cosine</th><th>final</th></tr>${ranked.map(r=>`<tr><td>${r.c.id}</td>${r.cv.map(x=>`<td>${x.toFixed(1)}</td>`).join("")}<td>${r.base.toFixed(2)}</td><td>${r.final}</td></tr>`).join("")}</table>`:"";
+}
+init();
+</script>
+
+</body>
+</html>
