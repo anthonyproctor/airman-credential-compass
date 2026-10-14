@@ -3,162 +3,199 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Ranks civilian certifications for Air Force and Air National Guard members by job, goals, experience and budget.">
 <title>Airman Credential Compass</title>
+<meta name="description" content="Ranks civilian certifications for Air Force and Air National Guard members by job, goals, experience and budget, and shows who can pay for them.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-/* Layout: two-panel "maintenance form" — profile inputs on the left, ranked results on the right; stacks on phones */
+/* Layout: profile rail (sticky on desktop, collapsible summary on phones) + results column led by one "best next step" card */
 :root{
-  --bg:#f3f4f1; --panel:#ffffff; --ink:#1d2430; --muted:#5b6574; --line:#d6dad3;
-  --accent:#b8780a; --accent-ink:#ffffff; --navy:#24324a; --good:#2f7a4f; --warn:#a45a12; --chip:#e9ece6;
-  --display:"Barlow Condensed","Arial Narrow",sans-serif;
-  --body:"IBM Plex Sans",system-ui,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --bg:#eef0ec; --surface:#ffffff; --sunk:#f6f7f4; --ink:#18202c; --muted:#5a6473; --line:#d9ddd5;
+  --navy:#1f2d44; --accent:#a86a00; --accent-soft:#f7ecd8; --good:#2c7048; --good-soft:#e5f1e9; --warn:#9a4e0c; --warn-soft:#f8eadb;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --r:10px; --shadow:0 1px 2px rgba(20,30,45,.06),0 6px 24px rgba(20,30,45,.06);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#141922; --panel:#1c2330; --ink:#e7eaef; --muted:#9aa5b5; --line:#2e3746;
-  --accent:#e0a33a; --accent-ink:#141922; --navy:#c9d4e6; --good:#62c08a; --warn:#e5a35a; --chip:#262f3d; color-scheme:dark}}
+  --bg:#11161e; --surface:#19202b; --sunk:#151b24; --ink:#e8ebf0; --muted:#9ba6b6; --line:#2a3341;
+  --navy:#cfd9ea; --accent:#e6a945; --accent-soft:#2e2615; --good:#6cc492; --good-soft:#16271e; --warn:#eba35e; --warn-soft:#2c2014;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#141922; --panel:#1c2330; --ink:#e7eaef; --muted:#9aa5b5; --line:#2e3746;
-  --accent:#e0a33a; --accent-ink:#141922; --navy:#c9d4e6; --good:#62c08a; --warn:#e5a35a; --chip:#262f3d; color-scheme:dark}
+  --bg:#11161e; --surface:#19202b; --sunk:#151b24; --ink:#e8ebf0; --muted:#9ba6b6; --line:#2a3341;
+  --navy:#cfd9ea; --accent:#e6a945; --accent-soft:#2e2615; --good:#6cc492; --good-soft:#16271e; --warn:#eba35e; --warn-soft:#2c2014;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
-.wrap{max-width:1180px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:3px solid var(--navy);padding-bottom:12px;margin-bottom:20px}
-h1{font-family:var(--display);font-weight:700;font-size:2.4rem;letter-spacing:.02em;margin:0;line-height:1;text-transform:uppercase;color:var(--navy)}
-.tag{font-family:var(--mono);font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
-.lede{max-width:62ch;color:var(--muted);margin:6px 0 0}
-.grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
-@media (max-width:860px){.grid{grid-template-columns:1fr}}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px;min-width:0}
-.panel h2{font-family:var(--display);font-weight:600;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--navy)}
-.field{display:grid;gap:6px;margin-bottom:16px}
-label,.lbl{font-family:var(--mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-select,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px}
-select:focus,input:focus,button:focus-visible,.chip:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1160px;margin:0 auto;padding-block:28px 56px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:24px}
+.brand h1{font:700 2.6rem/0.95 var(--display);letter-spacing:.01em;margin:0;color:var(--navy);text-wrap:balance}
+.brand p{margin:8px 0 0;color:var(--muted);max-width:52ch}
+.presets{display:flex;flex-direction:column;gap:8px;min-width:0}
+.presets span{font-size:.8rem;color:var(--muted)}
+.presets div{display:flex;flex-wrap:wrap;gap:8px}
+.preset{font:500 .85rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.preset:hover{border-color:var(--accent)}
+.preset[aria-pressed="true"]{background:var(--navy);color:var(--surface);border-color:var(--navy)}
+
+.layout{display:grid;grid-template-columns:350px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:880px){.layout{grid-template-columns:1fr}}
+
+/* profile */
+.profile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);position:sticky;top:max(16px,env(safe-area-inset-top,0px))}
+@media (max-width:880px){.profile{position:static}}
+.profile summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.profile summary::-webkit-details-marker{display:none}
+.profile summary h2{font:600 1.15rem var(--display);letter-spacing:.04em;text-transform:uppercase;margin:0;color:var(--navy)}
+.profile summary .edit{font-size:.85rem;color:var(--accent);font-weight:500;white-space:nowrap}
+.profile[open] summary .edit::after{content:" ▴"} .profile:not([open]) summary .edit::after{content:" ▾"}
+.who{display:block;color:var(--muted);font-size:.85rem;margin-top:4px;font-weight:400}
+.form{padding:4px 18px 18px;display:grid;gap:16px;border-top:1px solid var(--line);padding-top:16px}
+.f{display:grid;gap:6px;min-width:0}
+.f label,.f .lbl{font-size:.8rem;font-weight:600;color:var(--ink)}
+.f .hint{font-size:.78rem;color:var(--muted)}
+select,input[type=text]{width:100%;font:inherit;font-size:.95rem;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.85rem;cursor:pointer;user-select:none}
-.chip input{accent-color:var(--accent);margin:0}
-.chip:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--panel))}
-.range-row{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--sunk);border-radius:999px;padding:5px 11px;font-size:.85rem;cursor:pointer}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip:has(input:checked){background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip:has(input:checked)::before{content:"✓";color:var(--accent);font-weight:700}
+.chip:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
 input[type=range]{width:100%;accent-color:var(--accent)}
-.note{font-size:.8rem;color:var(--muted)}
-.results-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:12px}
-.results-head h2{margin:0}
-.list{display:grid;gap:12px}
-.card{border:1px solid var(--line);border-left:5px solid var(--line);border-radius:6px;padding:14px 16px;background:var(--panel);display:grid;gap:8px;min-width:0}
-.card.top{border-left-color:var(--accent)}
-.row1{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;justify-content:space-between}
-.rank{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-.name{font-family:var(--display);font-weight:600;font-size:1.35rem;letter-spacing:.02em;margin:0;line-height:1.15}
-.issuer{font-size:.85rem;color:var(--muted)}
-.score{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.9rem;font-variant-numeric:tabular-nums}
-.bar{width:110px;height:8px;background:var(--chip);border-radius:4px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--accent)}
-.facts{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem}
-.facts b{font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
-.why{margin:0;padding-left:18px;font-size:.88rem}
-.why li{margin:2px 0}
-.pill{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid currentColor}
-.ok{color:var(--good)} .flag{color:var(--warn)}
-.links{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem}
-a{color:var(--navy);text-underline-offset:2px}
-.fund{margin-top:20px}
-.fund ul{margin:0;padding-left:18px}
-.fund li{margin:6px 0;font-size:.9rem}
-details{margin-top:20px}
-summary{cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.1rem;letter-spacing:.05em;text-transform:uppercase;color:var(--navy)}
-.math{font-family:var(--mono);font-size:.8rem;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px;overflow-x:auto;white-space:pre}
-table{border-collapse:collapse;font-size:.8rem;font-variant-numeric:tabular-nums}
-th,td{border:1px solid var(--line);padding:4px 6px;text-align:left}
+.ends{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
+
+/* results */
+.results{display:grid;gap:16px;min-width:0}
+.rhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px}
+.rhead h2{font:600 1.15rem var(--display);letter-spacing:.04em;text-transform:uppercase;margin:0;color:var(--navy)}
+.rhead span{font-size:.85rem;color:var(--muted)}
+.best{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.best .band{background:var(--navy);color:var(--surface);padding:8px 20px;font:600 .95rem var(--display);letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:12px}
+.best .inner{padding:18px 20px 20px;display:grid;gap:14px}
+.title-row{display:flex;gap:16px;justify-content:space-between;align-items:flex-start}
+.cname{font:700 1.7rem/1.05 var(--display);margin:0;text-wrap:balance}
+.issuer{color:var(--muted);font-size:.9rem;margin-top:4px}
+.match{flex:none;text-align:center;min-width:72px}
+.match b{display:block;font:700 2rem/1 var(--display);color:var(--accent);font-variant-numeric:tabular-nums}
+.match small{font-size:.72rem;color:var(--muted)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0}
+.kv div{background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.kv dt{font-size:.75rem;color:var(--muted);margin:0 0 2px}
+.kv dd{margin:0;font-weight:500}
+.reasons{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.reasons li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem}
+.reasons li::before{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700;margin-top:1px}
+.reasons li.ok::before{content:"✓";background:var(--good-soft);color:var(--good)}
+.reasons li.chk::before{content:"!";background:var(--warn-soft);color:var(--warn)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:500;font-size:.9rem;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:var(--surface)}
+.btn.primary:hover{color:var(--surface);opacity:.9}
+.btn:hover{border-color:var(--accent);color:inherit}
+
+.others{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.others h3{font:600 1rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0;padding:14px 18px 6px}
+.item{border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.item summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 18px}
+.item summary::-webkit-details-marker{display:none}
+.item .n{font:500 .85rem var(--mono);color:var(--muted)}
+.item .nm{font-weight:600;line-height:1.3}
+.item .sub{font-size:.82rem;color:var(--muted)}
+.item .sc{display:flex;align-items:center;gap:8px;font:600 1.05rem var(--display);font-variant-numeric:tabular-nums}
+.meter{width:56px;height:6px;border-radius:3px;background:var(--sunk);border:1px solid var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent)}
+.item .body{padding:0 18px 16px 58px;display:grid;gap:10px}
+@media (max-width:520px){.item .body{padding-left:18px}.meter{display:none}}
+.item[open] summary .nm{color:var(--accent)}
+
+.pay{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.pay div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0}
+.pay h4{margin:0 0 6px;font-size:.95rem;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.pay p{margin:0;font-size:.86rem;color:var(--muted)}
+.badge{font:500 .7rem var(--mono);letter-spacing:.04em;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.badge.yes{background:var(--good-soft);color:var(--good)} .badge.no{background:var(--warn-soft);color:var(--warn)} .badge.maybe{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+
+.how{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.how summary{cursor:pointer;padding:14px 18px;font:600 1rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
+.how .body{padding:0 18px 18px;display:grid;gap:12px}
+.how p{margin:0;font-size:.9rem;color:var(--muted);max-width:70ch}
+.math{font:500 .78rem/1.6 var(--mono);background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;white-space:pre;margin:0}
 .tablewrap{overflow-x:auto}
-footer{margin-top:28px;font-size:.78rem;color:var(--muted);max-width:80ch}
-@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+table{border-collapse:collapse;font-size:.78rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+th,td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:500}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:28px;text-align:center;color:var(--muted)}
+footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);display:grid;gap:6px;max-width:90ch}
+@media (prefers-reduced-motion: no-preference){.best,.others{animation:rise .25s ease-out}@keyframes rise{from{transform:translateY(4px);opacity:.6}to{transform:none;opacity:1}}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
-<header>
-  <div>
-    <div class="tag">USAF / ANG · Credential recommender · Prototype</div>
-    <h1>Airman Credential Compass</h1>
-    <p class="lede">Tell it your Air Force job, where you want to go, and what you can spend. It ranks the civilian certifications that fit, shows what each one costs and who can pay for it, and explains why it ranked each one where it did.</p>
-  </div>
-</header>
+  <header class="top">
+    <div class="brand">
+      <h1>Airman Credential Compass</h1>
+      <p>Your next civilian certification, ranked for your Air Force job, your goals and your budget, with what it costs you and who can pay for it.</p>
+    </div>
+    <div class="presets" role="group" aria-label="Example profiles">
+      <span>Try an example airman</span>
+      <div>
+        <button class="preset" type="button" data-p="crew">F-16 crew chief, Guard</button>
+        <button class="preset" type="button" data-p="cyber">Cyber airman on orders</button>
+        <button class="preset" type="button" data-p="medic">Medic leaving service</button>
+      </div>
+    </div>
+  </header>
 
-<div class="grid">
-  <form class="panel" id="profile" autocomplete="off">
-    <h2>Your profile</h2>
-    <div class="field">
-      <label for="afsc">Air Force Specialty Code (AFSC)</label>
-      <select id="afsc"></select>
-    </div>
-    <div class="field">
-      <label for="status">Duty status</label>
-      <select id="status">
-        <option value="ad">Active duty (Regular AF / Space Force)</option>
-        <option value="orders">Guard or Reserve, on Title 10 or Title 32 502(f) orders</option>
-        <option value="drill">Guard or Reserve, drill status</option>
-        <option value="vet">Separated veteran</option>
-      </select>
-    </div>
-    <div class="field">
-      <span class="lbl">Where do you want to work? (pick one or more)</span>
-      <div class="chips" id="tracks"></div>
-    </div>
-    <div class="field">
-      <label for="exp">Years doing this kind of work (military counts)</label>
-      <select id="exp">
-        <option value="0">Under 1 year</option>
-        <option value="1">1 to 3 years</option>
-        <option value="3">3 to 5 years</option>
-        <option value="5">5+ years</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="budget">Most you'd pay out of pocket</label>
-      <select id="budget">
-        <option value="0">$0</option>
-        <option value="250">Up to $250</option>
-        <option value="500">Up to $500</option>
-        <option value="1000">Up to $1,000</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="stay">Stay in my career field ↔ Switch fields</label>
-      <input type="range" id="stay" min="0" max="10" step="1" value="4">
-      <div class="range-row"><span>Stay</span><span>Switch</span></div>
-    </div>
-    <div class="field">
-      <label for="loc">City or ZIP for job searches</label>
-      <input type="text" id="loc" value="Denver, CO">
-    </div>
-    <p class="note">The form opens filled with an example profile. Change anything and the list re-ranks instantly.</p>
-  </form>
-
-  <section class="panel" aria-live="polite">
-    <div class="results-head">
-      <h2>Recommended next credentials</h2>
-      <span class="tag" id="summary"></span>
-    </div>
-    <div class="list" id="list"></div>
-
-    <div class="fund" id="fund"></div>
-
-    <details>
-      <summary>How the ranking works</summary>
-      <p class="note">This is a content-based recommender. Each credential is described by a feature vector, your profile becomes a vector on the same features, and the base score is the cosine similarity between the two. Practical checks (experience prerequisites, cost against your budget after funding) then adjust that score.</p>
-      <div class="math" id="math"></div>
-      <div class="tablewrap" id="vectors"></div>
+  <div class="layout">
+    <details class="profile" id="profileBox" open>
+      <summary><span><h2>Your profile</h2><span class="who" id="who"></span></span><span class="edit">Edit</span></summary>
+      <form class="form" id="profile" autocomplete="off">
+        <div class="f"><label for="afsc">Air Force job (AFSC)</label><select id="afsc"></select></div>
+        <div class="f"><label for="status">Duty status</label>
+          <select id="status">
+            <option value="ad">Active duty</option>
+            <option value="orders">Guard or Reserve on Title 10 / 502(f) orders</option>
+            <option value="drill">Guard or Reserve, drill status</option>
+            <option value="vet">Separated veteran</option>
+          </select>
+          <span class="hint">Decides which funding you can use.</span></div>
+        <div class="f"><span class="lbl" id="tracksLbl">Where you want to work</span><div class="chips" id="tracks" role="group" aria-labelledby="tracksLbl"></div></div>
+        <div class="f"><label for="exp">Experience in this kind of work</label>
+          <select id="exp"><option value="0">Under 1 year</option><option value="1">1 to 3 years</option><option value="3">3 to 5 years</option><option value="5">5+ years</option></select>
+          <span class="hint">Military time counts.</span></div>
+        <div class="f"><label for="budget">Most you'd pay yourself</label>
+          <select id="budget"><option value="0">$0</option><option value="250">Up to $250</option><option value="500">Up to $500</option><option value="1000">Up to $1,000</option></select></div>
+        <div class="f"><label for="stay">Stay in your field or switch?</label><input type="range" id="stay" min="0" max="10" step="1" value="4"><div class="ends"><span>Stay in my field</span><span>Switch fields</span></div></div>
+        <div class="f"><label for="loc">City or ZIP for job links</label><input type="text" id="loc" value="Denver, CO"></div>
+      </form>
     </details>
-  </section>
-</div>
 
-<footer>
-  Data checked 14 October 2026 from each issuer's official site (fees, prerequisites), the AF career field education and training plans, VA.gov, and the AF COOL fact sheet. AFSC-to-credential links marked "inferred" were not taken from AF COOL. Fees change; confirm on the issuer's page before you pay. AF COOL eligibility rules are summarized from published fact sheets; your base education office has the final word. Built with Claude (Anthropic) as a class prototype for BANA 6780, CU Denver.
-</footer>
+    <main class="results" aria-live="polite">
+      <div class="rhead"><h2>Your recommendations</h2><span id="count"></span></div>
+      <div id="out"></div>
+      <section aria-labelledby="payh"><div class="rhead" style="margin-bottom:10px"><h2 id="payh">Ways to pay</h2></div><div class="pay" id="pay"></div></section>
+      <details class="how">
+        <summary>How the ranking works</summary>
+        <div class="body">
+          <p>Content-based filtering. Each credential is a vector over nine features: seven career tracks, a "matches your AFSC" feature, and an "entry level" feature. Your answers become a vector on the same features. The base score is the cosine similarity between the two. The score is then adjusted for experience you don't have yet, a required training course, and cost against your budget after funding.</p>
+          <pre class="math" id="math"></pre>
+          <div class="tablewrap" id="vectors"></div>
+        </div>
+      </details>
+    </main>
+  </div>
+
+  <footer>
+    <span>Fees and prerequisites checked 14 October 2026 on each issuer's official site. Four job-to-credential links come from official Air Force career field training plans; the rest are marked "our mapping" and were not taken from AF COOL. Funding rules are summarized from published fact sheets, and your base education office has the final word.</span>
+    <span>A BANA 6780 AI for Business project, CU Denver. Built with Claude (Anthropic). <a href="https://github.com/anthonyproctor/airman-credential-compass" target="_blank" rel="noopener">Source and data on GitHub</a>.</span>
+  </footer>
 </div>
 
 <script>
@@ -200,94 +237,96 @@ const AFSCS = {
  "4N0X1":{title:"Aerospace Medical Service",map:{nremt_emt:"cfetp",nremt_paramedic:"cfetp",nclex_pn:"inferred",nha_ccma:"inferred",nha_cpt:"inferred"}},
  "3F0X1":{title:"Human Resources and Administration",map:{shrm_cp:"inferred",hrci_aphr:"inferred",hrci_phr:"inferred",pmi_capm:"inferred"}}
 };
-const FEATURES = [...Object.keys(TRACKS),"my_afsc","entry_level"];
-const $ = s => document.querySelector(s);
 
+const FEATURES=[...Object.keys(TRACKS),"my_afsc","entry_level"];
+const PRESETS={
+  crew:{afsc:"2A3X3",status:"drill",exp:"5",budget:"500",stay:4,tracks:["aviation_maintenance","project_management"],loc:"Denver, CO"},
+  cyber:{afsc:"1D7 (was 3D1X2)",status:"orders",exp:"1",budget:"0",stay:3,tracks:["cybersecurity","it_networking"],loc:"Colorado Springs, CO"},
+  medic:{afsc:"4N0X1",status:"vet",exp:"0",budget:"250",stay:6,tracks:["healthcare"],loc:"Aurora, CO"}
+};
+const STATUS_TXT={ad:"active duty",orders:"Guard or Reserve on orders",drill:"Guard or Reserve on drill status",vet:"a separated veteran"};
+const EXP_TXT={"0":"under a year","1":"1 to 3 years","3":"3 to 5 years","5":"5+ years"};
+const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function applyPreset(k){const p=PRESETS[k];$("#afsc").value=p.afsc;$("#status").value=p.status;$("#exp").value=p.exp;$("#budget").value=p.budget;$("#stay").value=p.stay;$("#loc").value=p.loc;
+  document.querySelectorAll("#tracks input").forEach(i=>i.checked=p.tracks.includes(i.value));
+  document.querySelectorAll(".preset").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===k));render();}
 function init(){
-  const a=$("#afsc"); Object.entries(AFSCS).forEach(([k,v])=>a.add(new Option(`${k} · ${v.title}`,k)));
-  const t=$("#tracks");
-  Object.entries(TRACKS).forEach(([k,v])=>{const l=document.createElement("label");l.className="chip";l.innerHTML=`<input type="checkbox" id="t_${k}" value="${k}"> ${v}`;t.appendChild(l)});
-  // example profile: F-16 crew chief in the Guard, interested in maintenance and project work
-  a.value="2A3X3"; $("#status").value="drill"; $("#exp").value="5"; $("#budget").value="500";
-  ["aviation_maintenance","project_management"].forEach(k=>$("#t_"+k).checked=true);
-  $("#profile").addEventListener("input",render); $("#profile").addEventListener("submit",e=>e.preventDefault());
-  render();
+  Object.entries(AFSCS).forEach(([k,v])=>$("#afsc").add(new Option(`${k}, ${v.title}`,k)));
+  Object.entries(TRACKS).forEach(([k,v])=>{const l=document.createElement("label");l.className="chip";l.innerHTML=`<input type="checkbox" value="${k}">${v}`;$("#tracks").appendChild(l)});
+  document.querySelectorAll(".preset").forEach(b=>b.addEventListener("click",()=>applyPreset(b.dataset.p)));
+  $("#profile").addEventListener("input",()=>{document.querySelectorAll(".preset").forEach(b=>b.setAttribute("aria-pressed","false"));render()});
+  $("#profile").addEventListener("submit",e=>e.preventDefault());
+  if(matchMedia("(max-width:880px)").matches) $("#profileBox").open=false;
+  applyPreset("crew");
 }
-function credVector(c,afsc){
-  const v=FEATURES.map(f=>c.tracks.includes(f)?1:0);
-  v[FEATURES.indexOf("my_afsc")] = AFSCS[afsc].map[c.id]? (AFSCS[afsc].map[c.id]==="cfetp"?1:0.8) : 0;
-  v[FEATURES.indexOf("entry_level")] = c.level===0?1:c.level===1?0.5:0;
-  return v;
-}
-function userVector(p){
-  const v=FEATURES.map(f=>p.tracks.includes(f)?1:0);
-  v[FEATURES.indexOf("my_afsc")] = 1.5*(10-p.stay)/10;           // how much you want to stay in your field
-  v[FEATURES.indexOf("entry_level")] = p.exp<1?1:p.exp<3?0.5:0.15; // newer members lean toward entry credentials
-  return v;
-}
-const cosine=(a,b)=>{let d=0,na=0,nb=0;a.forEach((x,i)=>{d+=x*b[i];na+=x*x;nb+=b[i]*b[i]});return na&&nb?d/Math.sqrt(na*nb):0};
-function coolEligible(status){return status==="ad"||status==="orders"}
-function outOfPocket(c,p){
-  if(c.fee==null) return null;
-  if(coolEligible(p.status)) return 0;          // AF COOL pays exam + admin fees (lifetime cap $4,500)
-  return c.fee;                                  // GI Bill test reimbursement may refund it later; shown separately
+const read=()=>({afsc:$("#afsc").value,status:$("#status").value,exp:+$("#exp").value,expKey:$("#exp").value,budget:+$("#budget").value,stay:+$("#stay").value,loc:$("#loc").value.trim()||"United States",tracks:[...document.querySelectorAll("#tracks input:checked")].map(i=>i.value)});
+const cool=s=>s==="ad"||s==="orders";
+function vecC(c,afsc){const v=FEATURES.map(f=>c.tracks.includes(f)?1:0);const m=AFSCS[afsc].map[c.id];v[7]=m?(m==="cfetp"?1:.8):0;v[8]=c.level===0?1:c.level===1?.5:0;return v}
+function vecU(p){const v=FEATURES.map(f=>p.tracks.includes(f)?1:0);v[7]=1.5*(10-p.stay)/10;v[8]=p.exp<1?1:p.exp<3?.5:.15;return v}
+const cos=(a,b)=>{let d=0,x=0,y=0;a.forEach((q,i)=>{d+=q*b[i];x+=q*q;y+=b[i]*b[i]});return x&&y?d/Math.sqrt(x*y):0};
+function youPay(c,p){
+  if(c.id==="faa_amt_ap") return cool(p.status)?"$0 through AF COOL":"Written tests free (JSAMTCC); examiner fee varies";
+  if(c.fee==null) return cool(p.status)?"$0 through AF COOL":"Varies, see official page";
+  if(cool(p.status)) return "$0 through AF COOL";
+  return `$${c.fee.toLocaleString()}`+(p.status!=="ad"?" (GI Bill may refund it)":"");
 }
 function score(c,p){
-  const cv=credVector(c,p.afsc), uv=userVector(p), base=cosine(uv,cv);
-  let mult=1; const why=[], flags=[];
-  const mapped=AFSCS[p.afsc].map[c.id];
-  const trackHits=c.tracks.filter(t=>p.tracks.includes(t)).map(t=>TRACKS[t]);
-  if(trackHits.length) why.push(`Matches your goal: ${trackHits.join(", ")}`);
-  if(mapped==="cfetp") why.push(`Named in the official ${p.afsc} career field training plan`);
-  else if(mapped) why.push(`Common next step for ${p.afsc} (our mapping, not from AF COOL)`);
-  if(c.training){mult*=0.85; flags.push("Needs a formal course before the exam")}
-  if(c.exp>p.exp){mult*= c.exp-p.exp>=2?0.55:0.75; flags.push(`Experience needed: ${c.expText}`)}
-  else if(c.exp>0) why.push(`Your experience meets the requirement: ${c.expText}`);
-  const oop=outOfPocket(c,p);
-  if(oop===0) why.push("AF COOL can cover the exam on your current status");
-  else if(oop!=null && oop>p.budget){mult*= p.budget===0?0.6:0.75; flags.push(`About $${oop} out of pocket, over your $${p.budget} limit`)}
-  else if(oop!=null) why.push(`About $${oop} out of pocket, inside your budget`);
-  if(c.id==="faa_amt_ap"&&!coolEligible(p.status)) why.push("The 3 FAA written tests are free for Guard members through JSAMTCC");
-  return {c,base,final:Math.round(100*base*mult),why,flags,mapped,cv,uv};
+  const cv=vecC(c,p.afsc),uv=vecU(p),base=cos(uv,cv),m=AFSCS[p.afsc].map[c.id];let mult=1;const ok=[],chk=[];
+  const hits=c.tracks.filter(t=>p.tracks.includes(t)).map(t=>TRACKS[t]);
+  if(m==="cfetp") ok.push(`Named in the official ${p.afsc} career field training plan`);
+  else if(m) ok.push(`A natural next step from ${p.afsc} (our mapping)`);
+  if(hits.length) ok.push(`Fits your goal: ${hits.join(" and ")}`);
+  if(c.training){mult*=.85;chk.push("You'll need a formal course before the exam")}
+  if(c.exp>p.exp){mult*=c.exp-p.exp>=2?.55:.75;chk.push(`Experience required: ${c.expText}`)}
+  else if(c.exp>0) ok.push(`You meet the experience requirement (${c.expText})`);
+  const oop=c.fee==null?null:(cool(p.status)?0:c.fee);
+  if(oop===0) ok.push("AF COOL can pay for it on your current status");
+  else if(oop!=null&&oop>p.budget){mult*=p.budget===0?.6:.75;chk.push(`About $${oop} out of pocket, over your $${p.budget} limit`)}
+  if(c.id==="faa_amt_ap"&&!cool(p.status)) ok.push("The three FAA written tests are free for Guard members through JSAMTCC");
+  return {c,cv,uv,base,final:Math.round(100*base*mult),ok,chk,pay:youPay(c,p),cost:oop??9999};
 }
-function readProfile(){
-  return {afsc:$("#afsc").value,status:$("#status").value,exp:+$("#exp").value,budget:+$("#budget").value,stay:+$("#stay").value,
-    loc:$("#loc").value.trim()||"United States",tracks:[...document.querySelectorAll("#tracks input:checked")].map(i=>i.value)};
-}
+const jobs=(c,p)=>`https://www.indeed.com/jobs?q=${encodeURIComponent(c.name.replace(/\(.*?\)/g,"").trim())}&l=${encodeURIComponent(p.loc)}`;
+const reasons=r=>`<ul class="reasons">${r.ok.map(x=>`<li class="ok">${esc(x)}</li>`).join("")}${r.chk.map(x=>`<li class="chk">${esc(x)}</li>`).join("")}</ul>`;
 function render(){
-  const p=readProfile();
+  const p=read();
+  $("#who").textContent=`${p.afsc}, ${STATUS_TXT[p.status]}, ${EXP_TXT[p.expKey]} experience, ${p.budget?"up to $"+p.budget.toLocaleString():"nothing"} out of pocket.`;
   const pool=CREDS.filter(c=>AFSCS[p.afsc].map[c.id]||c.tracks.some(t=>p.tracks.includes(t)));
-  const ranked=pool.map(c=>score(c,p)).sort((a,b)=>b.final-a.final).slice(0,6);
-  $("#summary").textContent=`${ranked.length} of ${CREDS.length} credentials shown`;
-  $("#list").innerHTML = ranked.length? ranked.map((r,i)=>`
-    <article class="card ${i===0?"top":""}">
-      <div class="row1">
-        <div><div class="rank">#${i+1}</div><h3 class="name">${r.c.name}</h3><div class="issuer">${r.c.issuer}</div></div>
-        <div class="score" title="Match score out of 100"><span class="bar"><i style="width:${r.final}%"></i></span>${r.final}</div>
+  const R=pool.map(c=>score(c,p)).sort((a,b)=>b.final-a.final||a.cost-b.cost).slice(0,6);
+  $("#count").textContent=R.length?`Top ${R.length} of ${CREDS.length} credentials`:"";
+  if(!R.length){$("#out").innerHTML=`<div class="empty">Pick at least one place you want to work to see recommendations.</div>`}
+  else{
+    const b=R[0];
+    $("#out").innerHTML=`
+    <article class="best">
+      <div class="band"><span>Best next step</span><span>${esc(p.afsc)}</span></div>
+      <div class="inner">
+        <div class="title-row"><div><h3 class="cname">${esc(b.c.name)}</h3><div class="issuer">${esc(b.c.issuer)}</div></div>
+          <div class="match" title="Match score out of 100"><b>${b.final}</b><small>match</small></div></div>
+        <dl class="kv"><div><dt>You pay</dt><dd>${esc(b.pay)}</dd></div><div><dt>Exam fee</dt><dd>${esc(b.c.feeText)}</dd></div><div><dt>Leads to</dt><dd>${esc(b.c.roles)}</dd></div></dl>
+        ${reasons(b)}
+        <div class="actions"><a class="btn primary" href="${b.c.url}" target="_blank" rel="noopener">Official requirements ↗</a><a class="btn" href="${jobs(b.c,p)}" target="_blank" rel="noopener">Jobs near ${esc(p.loc)} ↗</a></div>
       </div>
-      <div class="facts"><span><b>Exam cost</b>${r.c.feeText}</span><span><b>Opens</b>${r.c.roles}</span></div>
-      <ul class="why">${r.why.map(w=>`<li><span class="pill ok">fit</span> ${w}</li>`).join("")}${r.flags.map(w=>`<li><span class="pill flag">check</span> ${w}</li>`).join("")}</ul>
-      <div class="links"><a href="${r.c.url}" target="_blank" rel="noopener">Official page</a>
-        <a href="https://www.indeed.com/jobs?q=${encodeURIComponent(r.c.name.replace(/\(.*\)/,"").trim())}&l=${encodeURIComponent(p.loc)}" target="_blank" rel="noopener">Jobs near ${p.loc}</a></div>
-    </article>`).join("") : `<p class="note">Pick at least one goal to see recommendations.</p>`;
-  const fund=[];
-  if(coolEligible(p.status)) fund.push(`<li><b>AF COOL</b> pays exams, admin fees, and up to $500 in books, with a $4,500 lifetime cap. You need a 5-level in your primary AFSC and supervisor approval, and you repay it if you fail the exam. Guard and Reserve must stay on Title 10 or Title 32 502(f) orders for the whole process.</li>`);
-  else if(p.status==="drill") fund.push(`<li><b>AF COOL</b> is not available on drill status. It opens up if you're on Title 10 or Title 32 502(f) orders for the whole credential process.</li>`);
-  else fund.push(`<li><b>AF COOL</b> ends when you separate.</li>`);
-  if(p.status!=="ad") fund.push(`<li><b>GI Bill test reimbursement</b> (VA) pays back up to $2,000 per approved test, including registration fees, and draws down your entitlement. Drilling Guard members use it under Chapter 1606 if eligible.</li>`);
-  fund.push(`<li><b>FAA mechanic written tests</b> are free for active, Guard and Reserve Air Force members through the JSAMTCC program.</li>`);
-  $("#fund").innerHTML=`<h2>Ways to pay</h2><ul>${fund.join("")}</ul>`;
-  const top=ranked[0];
-  $("#math").textContent = top? `features      = [${FEATURES.join(", ")}]
-your vector   = [${top.uv.map(x=>x.toFixed(2)).join(", ")}]
-${top.c.id.padEnd(13)} = [${top.cv.map(x=>x.toFixed(2)).join(", ")}]
-cosine        = ${top.base.toFixed(3)}
-adjustments   = experience, required course, cost vs budget after funding
-final score   = round(100 x cosine x adjustments) = ${top.final}` : "";
-  $("#vectors").innerHTML = ranked.length? `<table><tr><th>credential</th>${FEATURES.map(f=>`<th>${f}</th>`).join("")}<th>cosine</th><th>final</th></tr>${ranked.map(r=>`<tr><td>${r.c.id}</td>${r.cv.map(x=>`<td>${x.toFixed(1)}</td>`).join("")}<td>${r.base.toFixed(2)}</td><td>${r.final}</td></tr>`).join("")}</table>`:"";
+    </article>
+    ${R.length>1?`<section class="others"><h3>Also worth a look</h3>${R.slice(1).map((r,i)=>`
+      <details class="item"><summary><span class="n">${i+2}</span><span><div class="nm">${esc(r.c.name)}</div><div class="sub">You pay: ${esc(r.pay)}</div></span>
+        <span class="sc"><span class="meter"><i style="width:${r.final}%"></i></span>${r.final}</span></summary>
+        <div class="body">${reasons(r)}<div class="actions"><a class="btn" href="${r.c.url}" target="_blank" rel="noopener">Official requirements ↗</a><a class="btn" href="${jobs(r.c,p)}" target="_blank" rel="noopener">Jobs ↗</a></div></div>
+      </details>`).join("")}</section>`:""}`;
+  }
+  const c=cool(p.status);
+  $("#pay").innerHTML=`
+    <div><h4>AF COOL <span class="badge ${c?"yes":"no"}">${c?"Available":"Not on "+(p.status==="vet"?"separation":"drill status")}</span></h4><p>${c?"Pays exams, admin fees and up to $500 in books, $4,500 lifetime. Needs a 5-level and supervisor approval, and you repay it if you fail. Guard and Reserve must stay on orders the whole time.":p.status==="vet"?"Ends when you separate.":"Opens up if you're on Title 10 or 502(f) orders for the whole credential process."}</p></div>
+    <div><h4>GI Bill test refund <span class="badge ${p.status==="ad"?"maybe":"yes"}">${p.status==="ad"?"Usually not needed":"If eligible"}</span></h4><p>VA pays back up to $2,000 per approved test, including registration fees, and draws down your entitlement. Drilling Guard members use Chapter 1606.</p></div>
+    <div><h4>FAA mechanic tests <span class="badge ${p.status==="vet"?"no":"yes"}">${p.status==="vet"?"Military only":"Free"}</span></h4><p>The three FAA written tests are free for active, Guard and Reserve Air Force members through JSAMTCC.</p></div>`;
+  $("#math").textContent=R.length?`features     [${FEATURES.join(", ")}]
+you          [${R[0].uv.map(x=>x.toFixed(2)).join(", ")}]
+${R[0].c.id.padEnd(12)} [${R[0].cv.map(x=>x.toFixed(2)).join(", ")}]
+cosine       ${R[0].base.toFixed(3)}
+final score  round(100 x cosine x adjustments) = ${R[0].final}`:"";
+  $("#vectors").innerHTML=R.length?`<table><tr><th>credential</th>${FEATURES.map(f=>`<th>${f.replace("_"," ")}</th>`).join("")}<th>cosine</th><th>score</th></tr>${R.map(r=>`<tr><td>${r.c.id}</td>${r.cv.map(x=>`<td>${x.toFixed(1)}</td>`).join("")}<td>${r.base.toFixed(2)}</td><td>${r.final}</td></tr>`).join("")}</table>`:"";
 }
 init();
 </script>
-
 </body>
 </html>
