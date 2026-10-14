@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "compiled": "2026-10-14",
+    "sourcing_rule": "Every value marked verified came from a page or PDF actually opened. 'search_index_only' means the fact appeared only in a search-engine snippet of an official URL that returned HTTP 403 when opened; treat as UNVERIFIED.",
+    "blocked_sources": [
+      "static.e-publishing.af.mil (all CFETP PDFs returned HTTP 403 to WebFetch)",
+      "fcc.gov pages (HTTP 403)",
+      "astm.org NCATT page (HTTP 403)",
+      "certification.ipc.org (HTTP 403)",
+      "cool.osd.mil (AF COOL / USCG COOL: TLS certificate error)"
+    ],
+    "primary_classification_source": {
+      "title": "Department of the Air Force Enlisted Classification Directory (DAFECD)",
+      "date": "31 October 2025 (supersedes AFECD 30 April 2025)",
+      "opr": "HQ AFPC/DPPDW",
+      "url_opened": "https://tmd.texas.gov/Data/Sites/1/media/tmd-jobs/ang-dsg-vacancy/fy26/quarter-1/5763-dafecd--31-october-25-v2.5-final.pdf",
+      "note": "Official AFPC document, hosted by the Texas Military Department (state government) because myPers is not public."
+    }
+  },
+  "afscs": [
+    {
+      "code": "2A0X1",
+      "title": "Avionics Test Station, Components, and Electronic Warfare Systems",
+      "title_source": "DAFECD 31 Oct 25, entry marked '(Changed 31 Oct 24)'",
+      "superintendent_level": "2A090 Avionics (DAFECD, Changed 31 Oct 17)",
+      "is_avionics": true,
+      "history": "2017 CFETP title was 'Avionics Backshop Test Station and Components / Electronic Warfare Systems' (opened, CFETP 2A0X1X, 5 Oct 2017). Retitled per DAFECD change dated 31 Oct 24.",
+      "current_cfetp": {
+        "url": "https://static.e-publishing.af.mil/production/1/af_a4/publication/cfetp2a0x1/cfetp2a0x1.pdf",
+        "date": "15 September 2025 (supersedes 28 July 2021)",
+        "status": "search_index_only (HTTP 403 when opened) - UNVERIFIED"
+      },
+      "credentials_named_in_cfetp": {
+        "status": "Verified only for the superseded 5 Oct 2017 edition (mirror copy opened). Current 15 Sep 2025 edition UNVERIFIED.",
+        "edition_opened": "CFETP 2A0X1X, Parts I and II, 5 October 2017",
+        "url_opened": "https://s3.amazonaws.com/appforest_uf/f1657760461120x870048682579232600/cfetp2a0x1x.pdf",
+        "paragraph": "9.2",
+        "quote": "CCAF Academic Programs. In addition to its associate degree program, CCAF offers other credentialing programs (licensure and certification). ... Air Force Credentialing Opportunities On-Line (AF-COOL) supports programs like Air Force Airframe and Power plant (A&P) Certification; CCAF Instructor Certification; CCAF Instructional Systems Development (ISD) Certification; Joint Service Aviation Maintenance Technician Certification Council (JSAMTCC); and Professional Manager Certification (PMC).",
+        "named": ["FAA A&P (via AF A&P Certification program)", "CCAF Instructor Certification", "CCAF ISD Certification", "JSAMTCC", "Professional Manager Certification"],
+        "not_named": ["FCC GROL", "NCATT", "ETA", "IPC"]
+      }
+    },
+    {
+      "code": "2A2X1",
+      "title": "MHU-139 Electrical, Environmental and Avionics Technician",
+      "title_source": "DAFECD 31 Oct 25, entry marked '(Changed 30 Apr 24)'; title printed as 'MHU-139' (the aircraft is the MH-139; reproduced as printed)",
+      "skill_levels_listed": "2A211, 2A231, 2A251 only (no 7-level; DAFECD 3.4.2 lets 2A251 holders progress to 2A974)",
+      "is_avionics": true,
+      "history": "Older 2A2X1/2/3 (SOF/PR avionics) were folded into 2A9X4X per the 2A9X4X CFETP (search_index_only). The DAFECD now uses 2A2X1 for the MH-139 electrical/environmental/avionics technician.",
+      "current_cfetp": {"status": "UNVERIFIED - no current 2A2X1 CFETP located"},
+      "credentials_named_in_cfetp": {"status": "UNVERIFIED"}
+    },
+    {
+      "code": "2A3X4",
+      "title": "Fighter Aircraft Integrated Avionics",
+      "title_source": "DAFECD 31 Oct 25, entry marked '(Changed 30 Apr 25)'",
+      "shredouts": {"A": "A-10/U-2 Avionics", "B": "F-15 Avionics", "C": "F-16 Avionics"},
+      "is_avionics": true,
+      "current_cfetp": {
+        "url": "https://static.e-publishing.af.mil/production/1/af_a4/publication/cfetp2a3x4/cfetp2a3x4.pdf",
+        "date": "5 October 2017",
+        "status": "search_index_only - UNVERIFIED"
+      },
+      "credentials_named_in_cfetp": {"status": "UNVERIFIED (PDF not opened). The 2017 sibling CFETPs (2A0X1X, 2A3X5X) carry identical AF-COOL boilerplate naming A&P; likely the same but not confirmed."}
+    },
+    {
+      "code": "2A3X5",
+      "title": "Advanced Fighter Aircraft Integrated Avionics",
+      "title_source": "DAFECD 31 Oct 25, entry marked '(Changed 31 Oct 24)'",
+      "shredouts": {"A": "F-22", "B": "F-35"},
+      "scope": "Maintains F-22 and F-35 avionics and electrical & environmental (A&E) systems at the organizational level (DAFECD)",
+      "is_avionics": true,
+      "history": "2017 CFETP 2A3X5X (opened) covered F-22/F-35/MQ-1/MQ-9/RQ-4. The DAFECD now limits it to F-22/F-35; RPA (MQ-1/MQ-9/RQ-4) appears under 2A9X4 shred B.",
+      "current_cfetp": {
+        "url": "https://static.e-publishing.af.mil/production/1/af_a4/publication/cfetp2a3x5/cfetp2a3x5.pdf",
+        "date": "20 January 2026 (supersedes 20 June 2023)",
+        "status": "search_index_only - UNVERIFIED"
+      },
+      "credentials_named_in_cfetp": {
+        "status": "Verified only for the superseded 5 Oct 2017 edition. Current edition UNVERIFIED.",
+        "edition_opened": "CFETP 2A3X5X, Parts I and II, 5 October 2017",
+        "url_opened": "https://s3.amazonaws.com/appforest_uf/f1657763558588x274479732902838100/cfetp2a3x5.pdf",
+        "quote": "Air Force Credentialing Opportunities On-Line (AF-COOL) supports programs like Air Force Airframe and Power plant (A&P) Certification; CCAF Instructor Certification; ...",
+        "named": ["FAA A&P (via AF A&P Certification program)", "CCAF Instructor Certification", "CCAF ISD Certification", "JSAMTCC", "Professional Manager Certification"],
+        "not_named": ["FCC GROL", "NCATT", "ETA", "IPC"]
+      }
+    },
+    {
+      "code": "2A9X4",
+      "title": "Heavy Aircraft Integrated Avionics",
+      "title_source": "DAFECD 31 Oct 25, entry marked '(Changed 31 Oct 25)'",
+      "shredouts": {"A": "C4ISR Mission Systems (E-3, E-4, E-7, E-11, EC-130H, RC-135, VC-25)", "B": "Remotely Piloted Aircraft (MQ-1, MQ-9, RQ-4)"},
+      "scope": "Comm/nav/mission, instrument and flight control, EW, radar surveillance and computer systems on airlift, bomber, vertical lift, special mission and tanker aircraft (DAFECD 2.1)",
+      "is_avionics": true,
+      "history": "Per CFETP 2A9X4X (30 Nov 2023), it integrates 2A2X1/2/3, 2A8X1X/2X and 2A9X1X/2X/3X under the newly created 2A9X4X (search_index_only - UNVERIFIED). Supporting evidence opened: none of 2A8X1/2A8X2/2A9X1/2A9X2/2A9X3/2A2X2/2A2X3 appear in the 31 Oct 25 DAFECD. Exact conversion effective date UNVERIFIED.",
+      "current_cfetp": {
+        "url": "https://static.e-publishing.af.mil/production/1/af_a4/publication/cfetp2a9x4x/cfetp2a9x4x.pdf",
+        "date": "30 November 2023; Change 1 28 Feb 2024; Change 2 20 Feb 2026 (RPA STS supplement)",
+        "status": "search_index_only - UNVERIFIED"
+      },
+      "credentials_named_in_cfetp": {"status": "UNVERIFIED (PDF 403). Search snippet indicates an AF-COOL credentialing section; contents not confirmed."}
+    }
+  ],
+  "related_not_avionics": [
+    {"code": "2A6X6", "title": "Aircraft Electrical and Environmental Systems", "source": "DAFECD 31 Oct 25 (Changed 31 Jan 12)", "note": "Adjacent E&E specialty, not an avionics AFSC."}
+  ],
+  "not_current_codes_checked": [
+    {"code": "2A3X1", "finding": "Not present in DAFECD 31 Oct 25."},
+    {"code": "2A5X3", "finding": "Not present in DAFECD 31 Oct 25 (2A5 series lists only 2A5X1, 2A5X2 Helicopter/Tiltrotor Aircraft Maintenance, 2A5X4 Refuel/Bomber Aircraft Maintenance)."},
+    {"code": "2A5X2", "finding": "Current, but title is Helicopter/Tiltrotor Aircraft Maintenance (DAFECD, Changed 31 Oct 25) - crew chief field, not avionics."},
+    {"code": "2A8X1, 2A8X2, 2A9X1, 2A9X2, 2A9X3, 2A2X2, 2A2X3", "finding": "Not present in DAFECD 31 Oct 25; consolidated into 2A9X4 per CFETP 2A9X4X (search_index_only)."}
+  ],
+  "credentials": [
+    {
+      "id": "fcc_grol",
+      "name": "FCC General Radiotelephone Operator License (GROL)",
+      "issuer": "Federal Communications Commission",
+      "exam_elements": "Written Elements 1 and 3 (47 CFR 13.201(b)). Element 1: basic radio law and operating practice. Element 3: electronic fundamentals and techniques to adjust, repair and maintain radio transmitters and receivers at FCC-licensed stations in the aviation and maritime radio services (47 CFR 13.203).",
+      "eligibility": "Any person legally eligible for employment in the United States (47 CFR 13.9(a)(1)). Applications on FCC Form 605 (13.9(b)).",
+      "term": "Normally valid for the lifetime of the holder (47 CFR 13.15).",
+      "fcc_fee_usd": 35,
+      "fcc_fee_source": "47 CFR 1.1102(c) Table 2, personal license application, new license $35; Commercial Radio Operator licenses named as personal licenses. ETA's FCC page also states the FCC added a $35 fee for new commercial operator applications.",
+      "exam_administered_by": "COLEMs (Commercial Operator License Examination Managers); fees set by each COLEM (47 CFR 13.217 records rule for COLEMs recovering fees).",
+      "colem_exam_fees": [
+        {"colem": "ETA International", "fee": "$50 one element; $50 any two elements together; $25 each additional element same sitting; excludes FCC fee", "url": "https://www.etai.org/fcc_licenses.html"},
+        {"colem": "NMEA (National Marine Electronics Association)", "fee": "$50 per element", "url": "https://www.nmea.org/fcc--testing.html"}
+      ],
+      "typical_total_cost_usd": "About $85 (ETA: $50 for Elements 1+3 in one sitting, plus $35 FCC fee). NMEA route about $135. Derived from the fees above.",
+      "official_urls": ["https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-13", "https://www.fcc.gov/wireless/bureau-divisions/mobility-division/commercial-radio-operator-licenses (403 when fetched; UNVERIFIED content)"],
+      "typical_roles": ["Avionics technician (aircraft radio/transmitter repair)", "Aviation and marine radio repair", "Two-way radio / RF field technician"],
+      "roles_basis": "inferred from 47 CFR 13.203 Element 3 scope",
+      "afsc_mapping": {"2A0X1": "inferred", "2A2X1": "inferred", "2A3X4": "inferred", "2A3X5": "inferred", "2A9X4": "inferred"},
+      "mapping_note": "Not named in any CFETP edition opened. AF COOL listing UNVERIFIED (site unreachable).",
+      "endorsement": {
+        "name": "Ship Radar Endorsement",
+        "requirement": "Written Element 8 (47 CFR 13.201(b)(7)); may be added to GROL (13.7(c)(1)). Element 8 covers installation, servicing and maintenance of ship radar for marine navigation (13.203).",
+        "exam_fee": "ETA: $25 if taken with Elements 1+3 at the same sitting; NMEA: $50",
+        "fcc_fee": "UNVERIFIED whether a separate $35 FCC fee applies to adding an endorsement",
+        "relevance": "Marine radar specific; weak relevance to aircraft avionics (inferred)"
+      }
+    },
+    {
+      "id": "ncatt_aet",
+      "name": "ASTM NCATT Aircraft Electronics Technician (AET)",
+      "issuer": "ASTM International (NCATT program); exams administered by SpaceTEC Partners, Inc. (Credential Testing Services)",
+      "fee_usd": 175,
+      "fee_source": "https://spacetec.us/purchase-cts-certifications/ (opened; page shows accessibility 'Last updated: July 22, 2025', copyright 2026)",
+      "eligibility": "UNVERIFIED from an opened page (search snippets say open to all regardless of background; astm.org returned 403).",
+      "renewal": "UNVERIFIED from an opened page (search snippets say 5-year renewal since 1 Jan 2022).",
+      "typical_roles": ["Avionics technician (MRO, repair station)", "Aircraft electronics bench technician"],
+      "roles_basis": "inferred",
+      "afsc_mapping": {"2A0X1": "inferred", "2A2X1": "inferred", "2A3X4": "inferred", "2A3X5": "inferred", "2A9X4": "inferred"}
+    },
+    {
+      "id": "ncatt_endorsements_and_other",
+      "name": "ASTM NCATT certifications beyond AET (SpaceTEC price list)",
+      "issuer": "ASTM International / SpaceTEC Partners",
+      "fee_source": "https://spacetec.us/purchase-cts-certifications/",
+      "items": [
+        {"name": "Aircraft Electronics Installation Technician (AEIT)", "fee_usd": 150, "avionics_relevance": "high"},
+        {"name": "Autonomous Navigation Systems (ANS)", "fee_usd": 150, "avionics_relevance": "high"},
+        {"name": "Dependent Navigation Systems (DNS)", "fee_usd": 150, "avionics_relevance": "high"},
+        {"name": "Onboard Communications & Safety Systems (OCS)", "fee_usd": 150, "avionics_relevance": "high"},
+        {"name": "Radio Communication Systems (RCS)", "fee_usd": 150, "avionics_relevance": "high"},
+        {"name": "Unmanned Aircraft Systems (UAS)", "fee_usd": 225, "avionics_relevance": "medium (2A9X4B/RPA)"},
+        {"name": "Foreign Object Elimination (FOE)", "fee_usd": 250, "avionics_relevance": "low"},
+        {"name": "Aerospace/Aircraft Assembly (AAA)", "fee_usd": 175, "avionics_relevance": "low"},
+        {"name": "Business Aviation Cabin Crew (BACC)", "fee_usd": 175, "avionics_relevance": "none"}
+      ],
+      "prerequisite": "UNVERIFIED from an opened page (search snippets from astm.org say AET must be passed before endorsements).",
+      "electronic_systems_associate": "UNVERIFIED - no 'Electronic Systems Associate' appears on the SpaceTEC NCATT price list.",
+      "afsc_mapping_basis": "inferred"
+    },
+    {
+      "id": "eta_avn",
+      "name": "ETA International Avionics (AVN)",
+      "issuer": "ETA International",
+      "fee_usd": 80,
+      "exam": "75 questions, 75% pass, 2 hours, no hands-on",
+      "prerequisites": "None listed; FCC GROL 'highly recommended'",
+      "term": "4 years; maintenance $25/year ($100 per 4-year cycle) plus 10 CEU hours/year or employer verification",
+      "upgrade": "Stand-alone AVN + Associate CET can upgrade to Journeyman CET with 2+ years training/experience; upgrade fee $55",
+      "urls": ["https://www.etai.org/additional_certifications.html", "https://www.etai.org/maintenance.html"],
+      "typical_roles": ["Avionics installer/technician", "Aviation communications equipment technician"],
+      "roles_basis": "inferred",
+      "afsc_mapping": {"2A0X1": "inferred", "2A2X1": "inferred", "2A3X4": "inferred", "2A3X5": "inferred", "2A9X4": "inferred"},
+      "af_cool_listing": "UNVERIFIED"
+    },
+    {
+      "id": "eta_ceta",
+      "name": "ETA International Associate Certified Electronics Technician (CETa)",
+      "issuer": "ETA International",
+      "fee_usd": 65,
+      "exam": "100 questions, 75% pass, 2 hours; optional hands-on; one free retake within a year",
+      "audience": "Technicians with less than two years' electronics experience or training",
+      "term": "4 years, maintenance required",
+      "url": "https://www.etai.org/electronics.html",
+      "typical_roles": ["Entry-level electronics technician"],
+      "roles_basis": "inferred",
+      "afsc_mapping_basis": "inferred"
+    },
+    {
+      "id": "eta_arinc_fiber",
+      "name": "ETA ARINC Fiber Optics Installer (AFI) / Technician (AFT)",
+      "issuer": "ETA International",
+      "fee": "UNVERIFIED",
+      "term": "1 year (per https://www.etai.org/maintenance.html)",
+      "afsc_mapping_basis": "inferred",
+      "note": "Aerospace fiber optics; fee not found on an opened issuer page."
+    },
+    {
+      "id": "faa_ap",
+      "name": "FAA Mechanic Certificate, Airframe and Powerplant (A&P)",
+      "issuer": "Federal Aviation Administration",
+      "eligibility": "Part 147 school document, or 18 months practical experience for one rating, or 30 months concurrent experience for both (14 CFR 65.77)",
+      "fees": "UNVERIFIED (knowledge/practical test fees set by testing centers and examiners; not checked)",
+      "afsc_mapping": {"2A0X1": "cfetp (2017 edition, via AF-COOL A&P program)", "2A3X5": "cfetp (2017 edition, via AF-COOL A&P program)", "2A3X4": "UNVERIFIED", "2A9X4": "UNVERIFIED", "2A2X1": "UNVERIFIED"},
+      "note": "CFETP language names the 'Air Force Airframe and Power plant (A&P) Certification' program as an AF-COOL-supported program, not a requirement."
+    },
+    {
+      "id": "ipc_jstd001_cis",
+      "name": "IPC J-STD-001 Certified IPC Specialist (CIS) - Requirements for Soldered Electrical and Electronic Assemblies",
+      "issuer": "IPC (electronics.org)",
+      "how_obtained": "Training plus certification exams through IPC certification partners / training centers (IPC page links a 'database of certification partners'). Specialists are certified to the criteria; training others requires the separate CIT credential.",
+      "programs_with_endorsement": "CIS, CIT/MIT, CSE/SCSE (https://www.electronics.org/ipc-j-std-001-endorsement-program)",
+      "validity": "2 years; renew within 6 months before expiration; renewed cert runs 2 years from the prior expiration date (https://edhelp.ipc.org/certification/can-i-extend-my-certification-past-expiration)",
+      "cost_examples": [
+        {"provider": "Everett Community College (WA)", "price": "$895 tuition, 4 days / 32 clock hours", "url": "https://careerbridge.wa.gov/learn/program/3410"},
+        {"provider": "Fife College (UK) 2026/27", "price": "GBP 775 certification (3.5 days); GBP 715 recertification (3 days); GBP 1,250 one-day challenge test", "url": "https://www.fife.ac.uk/media/zyqolr01/em-ipc-course-dates-prices-2026-27-rev-01.pdf"}
+      ],
+      "official_ipc_price": "UNVERIFIED (none published on opened IPC pages)",
+      "candidates_per_ipc": "Assembly process engineers, quality assurance supervisors, training managers and others responsible for the quality and reliability of soldered electronic assemblies",
+      "typical_roles": ["Electronics/avionics assembler", "Aerospace test or lab technician", "QA inspector"],
+      "roles_basis": "inferred (plus IPC candidate list above)",
+      "afsc_mapping_basis": "inferred"
+    },
+    {
+      "id": "ipc_a610_cis",
+      "name": "IPC-A-610 Certified IPC Specialist (CIS) - Acceptability of Electronic Assemblies",
+      "issuer": "IPC (electronics.org)",
+      "how_obtained": "Training plus exams through IPC certification partners / training centers",
+      "programs_with_endorsement": "CIS, CIT/MIT, CSE/SCSE (https://www.electronics.org/ipc-610-acceptability-electronics-assemblies-endorsement-program)",
+      "validity": "2 years (same IPC renewal rule as above)",
+      "cost_examples": [
+        {"provider": "Everett Community College (WA)", "price": "$715 tuition, 3 days / 24 clock hours (listing names the older IPC-A-610E revision, so may be stale)", "url": "https://careerbridge.wa.gov/learn/program/3409"},
+        {"provider": "Fife College (UK) 2026/27", "price": "GBP 625 CIS certification or recertification (3 days); GBP 1,250 challenge test", "url": "https://www.fife.ac.uk/media/zyqolr01/em-ipc-course-dates-prices-2026-27-rev-01.pdf"}
+      ],
+      "official_ipc_price": "UNVERIFIED",
+      "candidates_per_ipc": "Anyone responsible for the quality and reliability of electronic assemblies; trainers, quality supervisors, engineering or manufacturing supervisors",
+      "typical_roles": ["QA inspector (electronics/avionics)", "Electronics/avionics assembler", "Aerospace test or lab technician"],
+      "roles_basis": "inferred (plus IPC candidate list above)",
+      "afsc_mapping_basis": "inferred"
+    }
+  ]
+}

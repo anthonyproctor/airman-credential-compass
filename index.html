@@ -201,14 +201,14 @@ footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-si
 
 <script>
 const TRACKS = {
-  aviation_maintenance:"Aviation maintenance", it_networking:"IT and networking", cybersecurity:"Cybersecurity",
+  aviation_maintenance:"Aviation maintenance", avionics:"Avionics and electronics", it_networking:"IT and networking", cybersecurity:"Cybersecurity",
   healthcare:"Healthcare", project_management:"Project management", hr_admin:"HR and admin", logistics:"Quality and logistics"
 };
 // fee: dollars used for budget math; feeText: what the user sees. exp: years of experience the issuer requires to sit the exam.
 // training: true when a formal course is required before the exam.
 const CREDS = [
  {id:"faa_amt_ap",name:"FAA Airframe & Powerplant (A&P)",issuer:"Federal Aviation Administration",url:"https://www.faa.gov/mechanics/become",tracks:["aviation_maintenance"],fee:null,feeText:"Varies by test center and examiner; the 3 written tests are free for military through FAA/JSAMTCC",exp:1.5,expText:"18 months documented experience for one rating, 30 months for both (14 CFR 65.77)",level:2,roles:"Airline or repair-station aircraft maintenance technician"},
- {id:"ncatt_aet",name:"NCATT Aircraft Electronics Technician (AET)",issuer:"ASTM International / NCATT",url:"https://www.astm.org/standards-and-solutions/certification/ncatt",tracks:["aviation_maintenance"],fee:175,feeText:"$175",exp:0,expText:"Eligibility not published on the pages checked",level:1,roles:"Avionics technician"},
+ {id:"ncatt_aet",name:"NCATT Aircraft Electronics Technician (AET)",issuer:"ASTM International / NCATT",url:"https://www.astm.org/standards-and-solutions/certification/ncatt",tracks:["aviation_maintenance","avionics"],fee:175,feeText:"$175",exp:0,expText:"Eligibility not published on the pages checked",level:1,roles:"Avionics technician"},
  {id:"asq_cqi",name:"ASQ Certified Quality Inspector (CQI)",issuer:"American Society for Quality",url:"https://www.asq.org/cert/quality-inspector",tracks:["aviation_maintenance","logistics"],fee:460,feeText:"$460 ($360 for ASQ members)",exp:1,expText:"3 years experience; a military or trade school diploma waives 2",level:2,roles:"Quality inspector, QA technician"},
  {id:"asq_cssgb",name:"ASQ Six Sigma Green Belt (CSSGB)",issuer:"American Society for Quality",url:"https://www.asq.org/cert/six-sigma-green-belt",tracks:["project_management","logistics"],fee:483,feeText:"$483 ($383 for ASQ members)",exp:3,expText:"3 years experience in the body of knowledge",level:2,roles:"Process improvement, operations analyst"},
  {id:"comptia_a_plus",name:"CompTIA A+",issuer:"CompTIA",url:"https://www.comptia.org/en-us/certifications/a/",tracks:["it_networking"],fee:548,feeText:"$274 per exam, 2 exams (about $548)",exp:0,expText:"None required; 12 months help-desk experience recommended",level:0,roles:"IT support specialist, help desk"},
@@ -227,10 +227,19 @@ const CREDS = [
  {id:"hrci_aphr",name:"HRCI Associate Professional in HR (aPHR)",issuer:"HR Certification Institute",url:"https://www.hrci.org/certifications/individual-certifications/aphr",tracks:["hr_admin"],fee:400,feeText:"$400",exp:0,expText:"No HR experience required",level:0,roles:"HR assistant, HR coordinator"},
  {id:"hrci_phr",name:"HRCI Professional in HR (PHR)",issuer:"HR Certification Institute",url:"https://www.hrci.org/certifications/individual-certifications/phr",tracks:["hr_admin"],fee:495,feeText:"$495",exp:4,expText:"1 to 4 years professional HR experience depending on degree",level:2,roles:"HR generalist, HR manager"},
  {id:"pmi_capm",name:"PMI Certified Associate in Project Management (CAPM)",issuer:"Project Management Institute",url:"https://www.pmi.org/certifications/certified-associate-capm",tracks:["project_management"],fee:300,feeText:"$300 ($225 PMI members)",exp:0,expText:"23 hours of PM education, no experience required",level:0,roles:"Project coordinator"},
- {id:"pmi_pmp",name:"PMI Project Management Professional (PMP)",issuer:"Project Management Institute",url:"https://www.pmi.org/certifications/project-management-pmp",tracks:["project_management"],fee:675,feeText:"$675 ($425 PMI members)",exp:3,expText:"35 hours training plus 3 to 5 years leading projects",level:2,roles:"Project manager, program manager"}
+ {id:"pmi_pmp",name:"PMI Project Management Professional (PMP)",issuer:"Project Management Institute",url:"https://www.pmi.org/certifications/project-management-pmp",tracks:["project_management"],fee:675,feeText:"$675 ($425 PMI members)",exp:3,expText:"35 hours training plus 3 to 5 years leading projects",level:2,roles:"Project manager, program manager"},
+ {id:"fcc_grol",name:"FCC General Radiotelephone Operator License (GROL)",issuer:"Federal Communications Commission",url:"https://www.fcc.gov/wireless/bureau-divisions/mobility-division/commercial-radio-operator-licenses",tracks:["avionics","aviation_maintenance"],fee:85,feeText:"$35 FCC fee plus about $50 for the exam session (ETA)",exp:0,expText:"No experience required; pass written Elements 1 and 3",level:1,roles:"Avionics and radio technician"},
+ {id:"eta_avn",name:"ETA Avionics Certification (AVN)",issuer:"ETA International",url:"https://www.etai.org/additional_certifications.html",tracks:["avionics"],fee:80,feeText:"$80 (4-year term)",exp:0,expText:"No prerequisites; the FCC GROL is highly recommended",level:1,roles:"Avionics technician"},
+ {id:"ipc_jstd001",name:"IPC J-STD-001 Soldering (CIS)",issuer:"IPC, through licensed training centers",url:"https://www.electronics.org/ipc-j-std-001-endorsement-program",tracks:["avionics","logistics"],fee:895,feeText:"Course plus exam at an IPC training center, about $715 to $895; valid 2 years",exp:0,training:true,coolUnclear:true,expText:"Taken through an IPC-licensed training course",level:0,roles:"Electronics assembler, test or lab technician, QA inspector"},
+ {id:"ipc_a610",name:"IPC-A-610 Electronic Assembly Acceptability (CIS)",issuer:"IPC, through licensed training centers",url:"https://www.electronics.org/ipc-610-acceptability-electronics-assemblies-endorsement-program",tracks:["avionics","logistics"],fee:715,feeText:"Course plus exam at an IPC training center, about $715; valid 2 years",exp:0,training:true,coolUnclear:true,expText:"Taken through an IPC-licensed training course",level:0,roles:"Electronics QA inspector, assembly technician"}
 ];
 // AFSC -> credentials. basis "cfetp" = named in the official AF career field training plan; "inferred" = our mapping, not from AF COOL.
 const AFSCS = {
+ "2A0X1":{title:"Avionics Test Station, Components and EW Systems",map:{ncatt_aet:"inferred",fcc_grol:"inferred",eta_avn:"inferred",ipc_jstd001:"inferred",ipc_a610:"inferred",faa_amt_ap:"cfetp2017"}},
+ "2A2X1":{title:"MH-139 Electrical, Environmental and Avionics",map:{ncatt_aet:"inferred",fcc_grol:"inferred",eta_avn:"inferred",faa_amt_ap:"inferred"}},
+ "2A3X4":{title:"Fighter Aircraft Integrated Avionics (A-10, U-2, F-15, F-16)",map:{ncatt_aet:"inferred",fcc_grol:"inferred",eta_avn:"inferred",ipc_jstd001:"inferred",faa_amt_ap:"inferred"}},
+ "2A3X5":{title:"Advanced Fighter Integrated Avionics (F-22, F-35)",map:{ncatt_aet:"inferred",fcc_grol:"inferred",eta_avn:"inferred",ipc_jstd001:"inferred",faa_amt_ap:"cfetp2017"}},
+ "2A9X4":{title:"Heavy Aircraft Integrated Avionics",map:{ncatt_aet:"inferred",fcc_grol:"inferred",eta_avn:"inferred",ipc_jstd001:"inferred",faa_amt_ap:"inferred"}},
  "2A3X3":{title:"Tactical Aircraft Maintenance (crew chief)",map:{faa_amt_ap:"cfetp",ncatt_aet:"inferred",asq_cqi:"inferred",asq_cssgb:"inferred"}},
  "2A6X1":{title:"Aerospace Propulsion",map:{faa_amt_ap:"cfetp",ncatt_aet:"inferred",asq_cqi:"inferred",asq_cssgb:"inferred"}},
  "1D7 (was 3D1X2)":{title:"Cyber Defense Ops, formerly Cyber Transport Systems",map:{comptia_network_plus:"inferred",cisco_ccna:"inferred",comptia_security_plus:"inferred",comptia_a_plus:"inferred"}},
@@ -240,12 +249,12 @@ const AFSCS = {
 };
 
 const FEATURES=[...Object.keys(TRACKS),"my_afsc","entry_level"];
-const SHORT={faa_amt_ap:"FAA A&P",ncatt_aet:"NCATT AET",asq_cqi:"ASQ CQI",asq_cssgb:"Six Sigma Green Belt",comptia_a_plus:"A+",comptia_network_plus:"Network+",comptia_security_plus:"Security+",comptia_linux_plus:"Linux+",cisco_ccna:"CCNA",ms_az104:"AZ-104",isc2_sscp:"SSCP",nremt_emt:"NREMT EMT",nremt_paramedic:"NREMT Paramedic",nclex_pn:"LPN (NCLEX-PN)",nha_ccma:"CCMA",nha_cpt:"Phlebotomy (CPT)",shrm_cp:"SHRM-CP",hrci_aphr:"aPHR",hrci_phr:"PHR",pmi_capm:"CAPM",pmi_pmp:"PMP"};
+const SHORT={faa_amt_ap:"FAA A&P",ncatt_aet:"NCATT AET",asq_cqi:"ASQ CQI",asq_cssgb:"Six Sigma Green Belt",comptia_a_plus:"A+",comptia_network_plus:"Network+",comptia_security_plus:"Security+",comptia_linux_plus:"Linux+",cisco_ccna:"CCNA",ms_az104:"AZ-104",isc2_sscp:"SSCP",nremt_emt:"NREMT EMT",nremt_paramedic:"NREMT Paramedic",nclex_pn:"LPN (NCLEX-PN)",nha_ccma:"CCMA",nha_cpt:"Phlebotomy (CPT)",shrm_cp:"SHRM-CP",hrci_aphr:"aPHR",hrci_phr:"PHR",pmi_capm:"CAPM",pmi_pmp:"PMP",fcc_grol:"FCC GROL",eta_avn:"ETA Avionics",ipc_jstd001:"IPC J-STD-001",ipc_a610:"IPC-A-610"};
 // holding the higher credential makes the lower one pointless
 const SUPERSEDES={pmi_pmp:["pmi_capm"],hrci_phr:["hrci_aphr"],nremt_paramedic:["nremt_emt"]};
 // from -> [to, basis]. "issuer" = the issuer recommends the first before the second; "ladder" = the usual next step.
 const PATHS={comptia_a_plus:[["comptia_network_plus","issuer"],["comptia_linux_plus","issuer"]],comptia_network_plus:[["comptia_security_plus","issuer"],["cisco_ccna","ladder"]],
-  pmi_capm:[["pmi_pmp","ladder"]],nremt_emt:[["nremt_paramedic","ladder"]],hrci_aphr:[["hrci_phr","ladder"]],asq_cqi:[["asq_cssgb","ladder"]],comptia_security_plus:[["isc2_sscp","ladder"]]};
+  pmi_capm:[["pmi_pmp","ladder"]],nremt_emt:[["nremt_paramedic","ladder"]],hrci_aphr:[["hrci_phr","ladder"]],asq_cqi:[["asq_cssgb","ladder"]],comptia_security_plus:[["isc2_sscp","ladder"]],fcc_grol:[["eta_avn","issuer"]],ipc_a610:[["ipc_jstd001","ladder"]]};
 const PRESETS={
   crew:{afsc:"2A3X3",status:"drill",exp:"5",budget:"500",stay:4,tracks:["aviation_maintenance","project_management"],held:["pmi_capm"],loc:"Denver, CO"},
   cyber:{afsc:"1D7 (was 3D1X2)",status:"orders",exp:"1",budget:"0",stay:3,tracks:["cybersecurity","it_networking"],held:["comptia_a_plus"],loc:"Colorado Springs, CO"},
@@ -271,12 +280,13 @@ function init(){
 }
 const read=()=>({afsc:$("#afsc").value,status:$("#status").value,exp:+$("#exp").value,expKey:$("#exp").value,budget:+$("#budget").value,stay:+$("#stay").value,loc:$("#loc").value.trim()||"United States",tracks:[...document.querySelectorAll("#tracks input:checked")].map(i=>i.value),held:[...document.querySelectorAll("#held input:checked")].map(i=>i.value)});
 const cool=s=>s==="ad"||s==="orders";
-function vecC(c,afsc){const v=FEATURES.map(f=>c.tracks.includes(f)?1:0);const m=AFSCS[afsc].map[c.id];v[7]=m?(m==="cfetp"?1:.8):0;v[8]=c.level===0?1:c.level===1?.5:0;return v}
-function vecU(p){const v=FEATURES.map(f=>p.tracks.includes(f)?1:0);v[7]=1.5*(10-p.stay)/10;v[8]=p.exp<1?1:p.exp<3?.5:.15;return v}
+function vecC(c,afsc){const v=FEATURES.map(f=>c.tracks.includes(f)?1:0);const m=AFSCS[afsc].map[c.id];v[FEATURES.indexOf("my_afsc")]=m?(m.startsWith("cfetp")?1:.8):0;v[FEATURES.indexOf("entry_level")]=c.level===0?1:c.level===1?.5:0;return v}
+function vecU(p){const v=FEATURES.map(f=>p.tracks.includes(f)?1:0);v[FEATURES.indexOf("my_afsc")]=1.5*(10-p.stay)/10;v[FEATURES.indexOf("entry_level")]=p.exp<1?1:p.exp<3?.5:.15;return v}
 const cos=(a,b)=>{let d=0,x=0,y=0;a.forEach((q,i)=>{d+=q*b[i];x+=q*q;y+=b[i]*b[i]});return x&&y?d/Math.sqrt(x*y):0};
 function youPay(c,p){
   if(c.id==="faa_amt_ap") return cool(p.status)?"$0 through AF COOL":"Written tests free (JSAMTCC); examiner fee varies";
   if(c.fee==null) return cool(p.status)?"$0 through AF COOL":"Varies, see official page";
+  if(c.coolUnclear) return `About $${c.fee.toLocaleString()} (course; AF COOL coverage unclear)`;
   if(cool(p.status)) return "$0 through AF COOL";
   return `$${c.fee.toLocaleString()}`+(p.status!=="ad"?" (GI Bill may refund it)":"");
 }
@@ -284,6 +294,7 @@ function score(c,p){
   const cv=vecC(c,p.afsc),uv=vecU(p),base=cos(uv,cv),m=AFSCS[p.afsc].map[c.id];let mult=1;const ok=[],chk=[];
   const hits=c.tracks.filter(t=>p.tracks.includes(t)).map(t=>TRACKS[t]);
   if(m==="cfetp") ok.push(`Named in the official ${p.afsc} career field training plan`);
+  else if(m==="cfetp2017") ok.push(`Listed in the 2017 ${p.afsc} career field training plan`);
   else if(m) ok.push(`A natural next step from ${p.afsc} (our mapping)`);
   if(hits.length) ok.push(`Fits your goal: ${hits.join(" and ")}`);
   const builds=p.held.flatMap(h=>(PATHS[h]||[]).filter(x=>x[0]===c.id).map(x=>[h,x[1]]));
@@ -291,7 +302,7 @@ function score(c,p){
   if(c.training&&!(c.id==="nremt_paramedic"&&p.held.includes("nremt_emt"))){mult*=.85;chk.push("You'll need a formal course before the exam")}
   if(c.exp>p.exp){mult*=c.exp-p.exp>=2?.55:.75;chk.push(`Experience required: ${c.expText}`)}
   else if(c.exp>0) ok.push(`You meet the experience requirement (${c.expText})`);
-  const oop=c.fee==null?null:(cool(p.status)?0:c.fee);
+  const oop=c.fee==null?null:(cool(p.status)&&!c.coolUnclear?0:c.fee);
   if(oop===0) ok.push("AF COOL can pay for it on your current status");
   else if(oop!=null&&oop>p.budget){mult*=p.budget===0?.6:.75;chk.push(`About $${oop} out of pocket, over your $${p.budget} limit`)}
   if(c.id==="faa_amt_ap"&&!cool(p.status)) ok.push("The three FAA written tests are free for Guard members through JSAMTCC");
